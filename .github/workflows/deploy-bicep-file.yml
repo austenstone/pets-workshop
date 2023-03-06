@@ -1,5 +1,5 @@
 on: [workflow_dispatch]
-name: Create Azure resources
+name: Deploy Bicep File
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
