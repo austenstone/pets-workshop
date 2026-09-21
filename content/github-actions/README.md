@@ -14,11 +14,14 @@ You're a developer, volunteering for a pet adoption shelter. They have a [Flask]
 To complete this workshop, you will need the following:
 
 - A [GitHub account][github-signup]
-- An [Azure subscription][azure-free] (for the deployment exercises)
 - Familiarity with Git basics (commit, push, pull)
+
+Azure access is not required for attendees. The Azure deployment exercise is a facilitator-led demo because its setup requires Azure, Microsoft Entra, role-assignment, and repository administration permissions.
 
 > [!NOTE]
 > If you have access to [GitHub Copilot][github-copilot], it can help you write workflow YAML files. You'll see tips throughout the exercises on how to use it effectively.
+
+Facilitators should use the [facilitator guide][facilitator] for timing, staffing, fallbacks, the exact ripcord, and the Azure demo plan.
 
 ## Exercises
 
@@ -51,6 +54,7 @@ To complete this workshop, you will need the following:
 [code-scanning]: ./2-code-scanning.md
 [custom-actions]: ./7-custom-actions.md
 [deployment]: ./6-deploy-azure.md
+[facilitator]: ./FACILITATOR.md
 [flask]: https://flask.palletsprojects.com/
 [github-actions]: https://github.com/features/actions
 [github-actions-docs]: https://docs.github.com/actions
@@ -60,7 +64,6 @@ To complete this workshop, you will need the following:
 [marketplace]: ./4-caching.md
 [matrix]: ./5-matrix-strategies.md
 [protection]: ./9-required-workflows.md
-[repo-root]: /
 [reusable-workflows]: ./8-reusable-workflows.md
 [setup]: ./0-setup.md
 [walkthrough-next]: ./0-setup.md

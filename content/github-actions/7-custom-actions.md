@@ -51,12 +51,12 @@ Let's create a composite action that sets up Python, installs dependencies, and 
       database-path:
         description: 'Path to the test database file'
         required: false
-        default: './test_dogshelter.db'
+        default: 'app/server/test_dogshelter.db'
 
     outputs:
       database-file:
         description: 'Path to the seeded database file'
-        value: ${{ steps.set-output.outputs.database-file }}
+        value: ${{ steps.database.outputs.path }}
 
     runs:
       using: 'composite'
@@ -70,17 +70,21 @@ Let's create a composite action that sets up Python, installs dependencies, and 
           run: pip install -r app/server/requirements.txt
           shell: bash
 
+        - name: Resolve database path
+          id: database
+          run: |
+            database_path="${{ inputs.database-path }}"
+            if [[ "$database_path" != /* ]]; then
+              database_path="$GITHUB_WORKSPACE/${database_path#./}"
+            fi
+            echo "path=$database_path" >> "$GITHUB_OUTPUT"
+          shell: bash
+
         - name: Seed the database
-          id: seed
           run: python app/server/utils/seed_database.py
           shell: bash
           env:
-            DATABASE_PATH: ${{ inputs.database-path }}
-
-        - name: Set output
-          run: echo "database-file=${{ inputs.database-path }}" >> $GITHUB_OUTPUT
-          shell: bash
-          id: set-output
+            DATABASE_PATH: ${{ steps.database.outputs.path }}
     ```
 
 > [!NOTE]
@@ -88,20 +92,15 @@ Let's create a composite action that sets up Python, installs dependencies, and 
 
 Review the key parts of the action:
 - **Inputs** provide sensible defaults so callers only need to override what's different.
-- **Outputs** reference the `set-output` step's output, making the database path available to the calling workflow.
+- **The path-resolution step** converts a repository-relative input to an absolute path. This matters because the seed command runs from the repository root while the Python tests run from `app/server`.
+- **Outputs** expose that absolute path to the calling workflow so every process opens the same SQLite file.
 - Each `run` step explicitly declares `shell: bash` as required by composite actions.
 
 ## Use the action in the CI workflow
 
-Now let's update the CI workflow to use the custom action instead of the individual setup and install steps. We'll also store the test database path as a repository variable — configured once in your repository settings and available to every workflow.
+Now let's update the CI workflow to use the custom action instead of the individual setup and install steps.
 
-1. Navigate to your repository on GitHub and go to **Settings** > **Secrets and variables** > **Actions** > **Variables** tab. Select **New repository variable** and create:
-    - **Name**: `TEST_DATABASE_PATH`
-    - **Value**: `./test_dogshelter.db`
-
-    This is the same `vars.*` mechanism that `azd pipeline config` used in the [deploy lesson][deploy-azure] for Azure credentials. Repository variables keep configuration out of your workflow files, making them easier to change without a code commit.
-
-2. Return to your codespace and open `.github/workflows/run-tests.yml`. In the `test-api` job, replace the **Set up Python** and **Install dependencies** steps (lines 23–32) with a single call to the composite action:
+1. Open `.github/workflows/run-tests.yml`. In the `test-api` job, replace the **Set up Python** and **Install dependencies** steps (lines 23–32) with a single call to the composite action:
 
     ```yaml
           - name: Setup Python environment
@@ -109,10 +108,10 @@ Now let's update the CI workflow to use the custom action instead of the individ
             uses: ./.github/actions/setup-python-env
             with:
               python-version: ${{ matrix.python-version }}
-              database-path: ${{ vars.TEST_DATABASE_PATH }}
+              database-path: app/server/test_dogshelter.db
     ```
 
-3. Update the **Run tests** step in `test-api` (line 34) to pass the database path from the action's output:
+2. Update the **Run tests** step in `test-api` (line 34) to pass the absolute database path from the action's output:
 
     ```yaml
           - name: Run tests
@@ -122,14 +121,14 @@ Now let's update the CI workflow to use the custom action instead of the individ
               DATABASE_PATH: ${{ steps.seed.outputs.database-file }}
     ```
 
-4. The `test-e2e` job has the same **Set up Python** and **Install Python dependencies** steps — a perfect chance to reuse the action. Replace those two steps with the same composite action call (no `python-version` override needed since the action defaults to 3.14):
+3. The `test-e2e` job has the same **Set up Python** and **Install Python dependencies** steps — a perfect chance to reuse the action. Replace those two steps with the same composite action call (no `python-version` override needed since the action defaults to 3.14):
 
     ```yaml
           - name: Setup Python environment
             id: seed
             uses: ./.github/actions/setup-python-env
             with:
-              database-path: ${{ vars.TEST_DATABASE_PATH }}
+              database-path: app/server/test_dogshelter.db
     ```
 
     Then update the **Run e2e tests** step to pass the database path so the Flask server started by Playwright can find the seeded database:
@@ -142,7 +141,7 @@ Now let's update the CI workflow to use the custom action instead of the individ
               DATABASE_PATH: ${{ steps.seed.outputs.database-file }}
     ```
 
-5. Here's the complete updated `run-tests.yml` for reference:
+4. Here's the complete updated `run-tests.yml` for reference:
 
     ```yaml
     name: Run Tests
@@ -172,7 +171,7 @@ Now let's update the CI workflow to use the custom action instead of the individ
             uses: ./.github/actions/setup-python-env
             with:
               python-version: ${{ matrix.python-version }}
-              database-path: ${{ vars.TEST_DATABASE_PATH }}
+              database-path: app/server/test_dogshelter.db
 
           - name: Run tests
             run: python -m unittest test_app -v
@@ -190,7 +189,7 @@ Now let's update the CI workflow to use the custom action instead of the individ
             id: seed
             uses: ./.github/actions/setup-python-env
             with:
-              database-path: ${{ vars.TEST_DATABASE_PATH }}
+              database-path: app/server/test_dogshelter.db
 
           - name: Set up Node.js
             uses: actions/setup-node@v4
@@ -214,7 +213,7 @@ Now let's update the CI workflow to use the custom action instead of the individ
               DATABASE_PATH: ${{ steps.seed.outputs.database-file }}
     ```
 
-6. In the terminal (<kbd>Ctl</kbd>+<kbd>`</kbd> to toggle), commit and push your changes:
+5. In the terminal (<kbd>Ctl</kbd>+<kbd>`</kbd> to toggle), commit and push your changes:
 
     ```bash
     git add .github/actions/setup-python-env/action.yml .github/workflows/run-tests.yml
@@ -222,7 +221,7 @@ Now let's update the CI workflow to use the custom action instead of the individ
     git push
     ```
 
-7. Navigate to the **Actions** tab on GitHub and verify the workflow runs successfully with the new action.
+6. Navigate to the **Actions** tab on GitHub and verify the workflow runs successfully with the new action.
 
 > [!TIP]
 > When developing custom actions, you can test them by pushing to a branch and triggering a workflow run. Check the workflow logs to ensure each step in your composite action executes as expected.

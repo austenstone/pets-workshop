@@ -50,17 +50,19 @@ You've now enabled Dependabot alerts and security updates! When an insecure libr
 > [!IMPORTANT]
 > After enabling Dependabot security updates you may notice new pull requests created for potentially outdated packages. For this workshop you can ignore these pull requests.
 
-## Enable secret scanning
+## Verify secret scanning
 
 Many developers have accidentally checked in code containing tokens or credentials. Regardless of the reason, even seemingly innocuous tokens can create a security issue. [Secret scanning][about-secret-scanning] detects tokens in your source code and raises alerts. With push protection enabled, pushes containing supported secrets are blocked before they reach your repository.
 
+For public repositories, secret scanning and push protection are enabled by default. You only need to verify their status:
+
 1. On the same **Advanced security** settings page, locate the **Secret Protection** section.
-2. Next to **GitHub will always send alerts to partners for detected secrets in public repositories**, select **Enable**.
-3. Next to **Push protection**, select **Enable** to block pushes containing a [supported secret][supported-secrets].
+2. Confirm **Secret scanning** shows **Enabled**.
+3. Confirm **Push protection** shows **Enabled** for [supported secrets][supported-secrets].
 
     ![Screenshot of fully configured secret scanning](../shared-images/setup-secret-protection.png)
 
-You've now enabled secret scanning and push protection — helping prevent credentials from reaching your repository.
+No change is required for the public workshop repository. If either feature is unavailable or managed by an organization policy, continue to the next section and ask the facilitator to demonstrate the setting.
 
 ## Enable code scanning
 
@@ -87,10 +89,10 @@ A background process starts and configures a CodeQL analysis workflow for your r
 
 ## Summary and next steps
 
-You've enabled GitHub Advanced Security for your repository:
+You've reviewed and configured GitHub's security features for your repository:
 
 - **Dependabot** monitors dependencies for known vulnerabilities and creates PRs to update them.
-- **Secret scanning** detects leaked credentials and blocks pushes containing supported secrets.
+- **Secret scanning** and **push protection** are enabled by default for public repositories and help prevent supported credentials from reaching the repository.
 - **Code scanning** analyzes your source code using CodeQL, running as a GitHub Actions workflow on every push and PR.
 
 These tools run automatically in the background, catching security issues before they reach production. Now that you've seen how GitHub uses Actions internally for security automation, it's time to build your own CI workflow. Next, we'll [automate testing][walkthrough-next] for the shelter's application.

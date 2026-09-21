@@ -46,6 +46,6 @@ You've created the repository and opened a codespace — you're ready to start b
 
 [fork-repo]: https://docs.github.com/get-started/quickstart/fork-a-repo
 [template-repo]: https://docs.github.com/repositories/creating-and-managing-repositories/creating-a-template-repository
-[repo-root]: /
+[repo-root]: ../..
 [walkthrough-previous]: README.md
 [walkthrough-next]: 1-introduction.md

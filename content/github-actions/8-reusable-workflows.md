@@ -87,7 +87,7 @@ deploy:
 
 ## Create a reusable deployment workflow
 
-Let's extract the shared deploy steps into a reusable workflow. The workflow will accept an optional `deploy-ref` input so callers can deploy any git ref — the current commit, a previous release tag, or a specific commit SHA.
+Let's extract the shared deploy steps into a reusable workflow. The workflow requires a `deploy-ref` input so every caller explicitly identifies the commit, tag, or branch to deploy.
 
 1. In your codespace, create a new file at `.github/workflows/reusable-deploy.yml`.
 
@@ -100,10 +100,9 @@ Let's extract the shared deploy steps into a reusable workflow. The workflow wil
       workflow_call:
         inputs:
           deploy-ref:
-            description: 'Git ref to deploy (commit SHA, tag, or branch). Defaults to the caller workflow ref.'
-            required: false
+            description: 'Git ref to deploy (commit SHA, tag, or branch).'
+            required: true
             type: string
-            default: ''
     ```
 
 3. Add a single job that checks out the code, authenticates with Azure, and deploys:
@@ -119,7 +118,7 @@ Let's extract the shared deploy steps into a reusable workflow. The workflow wil
           - name: Checkout code
             uses: actions/checkout@v4
             with:
-              ref: ${{ inputs.deploy-ref || github.sha }}
+              ref: ${{ inputs.deploy-ref }}
 
           - name: Install azd
             uses: Azure/setup-azd@v2
@@ -166,10 +165,12 @@ Now update your `azure-dev.yml` to call the reusable workflow instead of definin
       deploy:
         if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
         uses: ./.github/workflows/reusable-deploy.yml
+        with:
+          deploy-ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
         secrets: inherit
     ```
 
-    Notice how the entire job definition is replaced by a single `uses:` reference. The reusable workflow handles checkout, authentication, and deployment — the caller just decides *when* to deploy.
+    Notice how the entire job definition is replaced by a single `uses:` reference. The caller passes `github.event.workflow_run.head_sha` for automated deployments, so the reusable workflow checks out the exact commit that passed CI rather than whichever commit is currently at the tip of `main`. Manual runs use the commit selected for that run.
 
 ## Create a manual deploy workflow
 
@@ -236,7 +237,7 @@ Next, we'll ensure quality gates are enforced with [branch protection, required 
 
 [actions-marketplace]: https://github.com/marketplace?type=actions
 [reusing-workflows]: https://docs.github.com/actions/sharing-automations/reusing-workflows
-[sharing-workflows]: https://docs.github.com/actions/sharing-automations/sharing-workflows-secrets-and-runners-with-your-organization
+[sharing-workflows]: https://docs.github.com/actions/how-tos/reuse-automations/reuse-workflows#sharing-workflows
 [skills-reusable-workflows]: https://github.com/skills/reusable-workflows
 [workflow-call-event]: https://docs.github.com/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#workflow_call
 [walkthrough-previous]: 7-custom-actions.md
