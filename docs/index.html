@@ -1,0 +1,314 @@
+<!doctype html>
+<!--
+THESIS: A live workshop route, not a documentation index. The persistent timeline makes the room's current position and next outcome unmistakable.
+OWN-WORLD: Tailspin's slate field, cobalt actions, bone text, thin blue route lines, and flat instruction plates without decorative card grids.
+STORY: Attendees prepare once, build CI in deliberate stages, observe prepared deployment patterns, and leave with a complete automation model.
+FIRST VIEWPORT: Workshop title and promise on the left, a two-hour route diagram on the right, with the primary setup action visible immediately.
+FORM: The fourth grounded structure, a sticky timeline rail with full-width module plates; seed key 9522ca6e.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Attendee guide for the GitHub Actions: From CI to CD workshop at WeAreDevelopers North America 2026.">
+    <meta name="theme-color" content="#0f172a">
+    <title>GitHub Actions Workshop | From CI to CD</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./guide.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to workshop guide</a>
+
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="GitHub Actions workshop home">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.88c-2.78.6-3.37-1.18-3.37-1.18-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.53 2.35 1.09 2.92.83.09-.65.35-1.09.64-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.64 0 0 .84-.27 2.75 1.02A9.58 9.58 0 0 1 12 6.82a9.6 9.6 0 0 1 2.5.34c1.91-1.3 2.75-1.02 2.75-1.02.55 1.37.2 2.39.1 2.64.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.86v2.76c0 .27.18.58.69.48A10 10 0 0 0 12 2Z"/>
+        </svg>
+        <span>Actions Workshop</span>
+      </a>
+      <nav class="route-nav" aria-label="Workshop modules">
+        <a href="#setup" aria-label="Workshop setup">Setup</a>
+        <a href="#module-1" aria-label="Module 1: Your first workflow">1</a>
+        <a href="#module-2" aria-label="Module 2: Secure the development pipeline">2</a>
+        <a href="#module-3" aria-label="Module 3: Run Python and browser tests">3</a>
+        <a href="#module-4" aria-label="Module 4: Cache dependencies">4</a>
+        <a href="#module-5" aria-label="Module 5: Expand into a test matrix">5</a>
+        <a href="#module-6" aria-label="Module 6: Deploy to Azure">6</a>
+        <a href="#module-7" aria-label="Module 7: Build a composite action">7</a>
+        <a href="#module-8" aria-label="Module 8: Reuse deployment workflows">8</a>
+        <a href="#module-9" aria-label="Module 9: Enforce repository rules">9</a>
+      </nav>
+      <a class="header-link" href="https://github.com/austenstone/pets-workshop" target="_blank" rel="noreferrer">Source repository</a>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="top">
+        <div class="hero-copy">
+          <p class="event-line">WeAreDevelopers North America 2026 · Stage 12 · 120 minutes</p>
+          <h1>Build a complete CI/CD pipeline with GitHub Actions.</h1>
+          <p class="hero-intro">You will automate tests for a real Flask and Astro application, add caching and matrix testing, and see how deployment, reusable automation, and repository rules fit together.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#setup">Start setup</a>
+            <a class="button button-secondary" href="https://github.com/austenstone/pets-workshop/generate" target="_blank" rel="noreferrer">Create your repository</a>
+          </div>
+          <p class="account-note">Bring a GitHub account. Azure access is not required.</p>
+        </div>
+
+        <div class="route-visual" aria-label="Workshop route from source code to protected deployment">
+          <p class="route-title">Your route today</p>
+          <ol>
+            <li><span>Write</span><strong>First workflow</strong></li>
+            <li><span>Validate</span><strong>Python + Playwright</strong></li>
+            <li><span>Scale</span><strong>Cache + matrix</strong></li>
+            <li><span>Ship</span><strong>OIDC deployment</strong></li>
+            <li><span>Reuse</span><strong>Actions + workflows</strong></li>
+            <li><span>Protect</span><strong>Rulesets</strong></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="orientation" aria-labelledby="orientation-title">
+        <div>
+          <h2 id="orientation-title">The application you are automating</h2>
+          <p>Tailspin Shelter is intentionally small enough to understand quickly and real enough to demonstrate a production CI/CD path.</p>
+        </div>
+        <div class="architecture" role="img" aria-label="Browser connects to Astro frontend, which connects to Flask API and SQLite. GitHub Actions runs Python and Playwright tests.">
+          <span>Browser</span>
+          <i aria-hidden="true">→</i>
+          <span>Astro</span>
+          <i aria-hidden="true">→</i>
+          <span>Flask API</span>
+          <i aria-hidden="true">→</i>
+          <span>SQLite</span>
+          <b>GitHub Actions validates the entire path</b>
+        </div>
+      </section>
+
+      <section class="setup-band" id="setup" aria-labelledby="setup-title">
+        <div class="module-meta">
+          <span class="time">10 minutes</span>
+          <span class="format hands-on">Everyone</span>
+        </div>
+        <div class="module-content">
+          <h2 id="setup-title">Start here: create your workshop repository</h2>
+          <p class="outcome">Outcome: you have your own public copy of the project open in a browser editor.</p>
+          <ol class="steps">
+            <li><a href="https://github.com/austenstone/pets-workshop/generate" target="_blank" rel="noreferrer">Create a repository from the template</a>. Do not fork it.</li>
+            <li>Name it <code>pets-workshop</code> and keep it public.</li>
+            <li>Open your new repository and press <kbd>.</kbd> to launch <code>github.dev</code>.</li>
+            <li>Keep the repository's <strong>Actions</strong> tab open in a second browser tab.</li>
+          </ol>
+          <div class="recovery">
+            <strong>Blocked?</strong>
+            <span>Pair with the person beside you. Codespaces is optional, not required.</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="module-stack">
+        <article class="module" id="module-1">
+          <div class="module-meta">
+            <span class="module-number">1</span>
+            <span class="time">10 minutes</span>
+            <span class="format hands-on">Hands-on</span>
+          </div>
+          <div class="module-content">
+            <h2>Your first workflow</h2>
+            <p class="outcome">Outcome: manually run a workflow and read its job logs.</p>
+            <p>Create <code>.github/workflows/hello.yml</code>, commit it, and use the Actions tab to trigger it with <code>workflow_dispatch</code>.</p>
+            <ul class="show-list">
+              <li><strong>Event:</strong> what starts the automation</li>
+              <li><strong>Job:</strong> work assigned to a fresh hosted runner</li>
+              <li><strong>Step:</strong> an action or shell command inside the job</li>
+              <li><strong>Logs:</strong> where you inspect output and failures</li>
+            </ul>
+            <a class="text-link" href="https://github.com/austenstone/pets-workshop/blob/wearedevelopers-na-2026/content/github-actions/1-introduction.md" target="_blank" rel="noreferrer">Open exercise 1 instructions</a>
+          </div>
+        </article>
+
+        <article class="module" id="module-2">
+          <div class="module-meta">
+            <span class="module-number">2</span>
+            <span class="time">10 minutes</span>
+            <span class="format observe">Follow along</span>
+          </div>
+          <div class="module-content">
+            <h2>Secure the development pipeline</h2>
+            <p class="outcome">Outcome: understand how GitHub automates dependency, secret, and code analysis.</p>
+            <p>Follow the facilitator through <strong>Settings → Advanced security</strong>. Your available controls may differ based on account and organization policy.</p>
+            <div class="three-part">
+              <div><strong>Dependencies</strong><span>Dependabot alerts and update pull requests</span></div>
+              <div><strong>Credentials</strong><span>Secret scanning and push protection</span></div>
+              <div><strong>Source</strong><span>CodeQL analysis powered by Actions</span></div>
+            </div>
+            <a class="text-link" href="https://github.com/austenstone/pets-workshop/blob/wearedevelopers-na-2026/content/github-actions/2-code-scanning.md" target="_blank" rel="noreferrer">Open exercise 2 instructions</a>
+          </div>
+        </article>
+
+        <article class="module core-module" id="module-3">
+          <div class="module-meta">
+            <span class="module-number">3</span>
+            <span class="time">25 minutes</span>
+            <span class="format hands-on">Core hands-on</span>
+          </div>
+          <div class="module-content">
+            <h2>Run Python and browser tests in parallel</h2>
+            <p class="outcome">Outcome: every push and pull request runs API unit tests and Playwright end-to-end tests.</p>
+            <p>Create <code>.github/workflows/run-tests.yml</code> with two independent jobs:</p>
+            <div class="job-flow" aria-label="A push starts API tests and end-to-end tests in parallel">
+              <span>Push or pull request</span>
+              <i aria-hidden="true">→</i>
+              <span>Python API tests</span>
+              <span>Playwright E2E</span>
+            </div>
+            <ul class="show-list">
+              <li>Declare <code>permissions: contents: read</code>.</li>
+              <li>Use GitHub-maintained setup actions for Python and Node.js.</li>
+              <li>Install dependencies with <code>pip</code> and <code>npm ci</code>.</li>
+              <li>Let both jobs run simultaneously by leaving out <code>needs</code>.</li>
+            </ul>
+            <div class="recovery">
+              <strong>Your checkpoint</strong>
+              <span>Do not continue until the <strong>Run Tests</strong> workflow appears. A helper can recover the exact YAML with you.</span>
+            </div>
+            <a class="text-link" href="https://github.com/austenstone/pets-workshop/blob/wearedevelopers-na-2026/content/github-actions/3-running-tests.md" target="_blank" rel="noreferrer">Open exercise 3 instructions</a>
+          </div>
+        </article>
+
+        <article class="module" id="module-4">
+          <div class="module-meta">
+            <span class="module-number">4</span>
+            <span class="time">8 minutes</span>
+            <span class="format hands-on">Small edit</span>
+          </div>
+          <div class="module-content">
+            <h2>Cache dependencies</h2>
+            <p class="outcome">Outcome: unchanged Python and npm packages can be restored instead of downloaded again.</p>
+            <p>Add the built-in <code>pip</code> and <code>npm</code> cache settings to the setup actions. The npm cache is keyed by <code>app/client/package-lock.json</code>.</p>
+            <p class="note">The first run is a cache miss. The facilitator will show a prepared cache-hit run rather than waiting for everyone to trigger a second run.</p>
+            <a class="text-link" href="https://github.com/austenstone/pets-workshop/blob/wearedevelopers-na-2026/content/github-actions/4-caching.md" target="_blank" rel="noreferrer">Open exercise 4 instructions</a>
+          </div>
+        </article>
+
+        <article class="module" id="module-5">
+          <div class="module-meta">
+            <span class="module-number">5</span>
+            <span class="time">10 minutes</span>
+            <span class="format hands-on">Hands-on</span>
+          </div>
+          <div class="module-content">
+            <h2>Expand one job into a test matrix</h2>
+            <p class="outcome">Outcome: the same API tests run against Python 3.12, 3.13, and 3.14.</p>
+            <p>Add a matrix strategy and replace the fixed Python version with <code>${{ matrix.python-version }}</code>. Once the job graph fans out, you have reached the checkpoint.</p>
+            <div class="matrix-row" aria-label="Python tests run on three versions">
+              <span>3.12</span><span>3.13</span><span>3.14</span>
+            </div>
+            <div class="recovery">
+              <strong>Switching to demo mode</strong>
+              <span>If you are still recovering CI, stop editing here and follow the remaining modules from the facilitator's prepared repository.</span>
+            </div>
+            <a class="text-link" href="https://github.com/austenstone/pets-workshop/blob/wearedevelopers-na-2026/content/github-actions/5-matrix-strategies.md" target="_blank" rel="noreferrer">Open exercise 5 instructions</a>
+          </div>
+        </article>
+
+        <article class="module demo-module" id="module-6">
+          <div class="module-meta">
+            <span class="module-number">6</span>
+            <span class="time">12 minutes</span>
+            <span class="format demo">Facilitator demo</span>
+          </div>
+          <div class="module-content">
+            <h2>Deploy to Azure after CI passes</h2>
+            <p class="outcome">Outcome: understand a passwordless, CI-gated deployment without needing an Azure subscription.</p>
+            <p>Observe a prepared repository as a successful test run triggers deployment of the exact commit that passed CI.</p>
+            <ul class="show-list">
+              <li><code>workflow_run</code> gates deployment on the completed CI workflow.</li>
+              <li><code>head_sha</code> identifies the validated commit.</li>
+              <li>OIDC provides short-lived Azure authentication without a stored password.</li>
+              <li>Concurrency prevents conflicting production deployments.</li>
+              <li>Bicep defines the application infrastructure as code.</li>
+            </ul>
+            <p class="note">Do not run Azure commands during the workshop. The successful workflow and deployed application are prepared in advance.</p>
+            <a class="text-link" href="https://github.com/austenstone/pets-workshop/blob/wearedevelopers-na-2026/content/github-actions/6-deploy-azure.md" target="_blank" rel="noreferrer">Read the deployment reference</a>
+          </div>
+        </article>
+
+        <article class="module" id="module-7">
+          <div class="module-meta">
+            <span class="module-number">7</span>
+            <span class="time">12 minutes</span>
+            <span class="format hands-on">Guided build</span>
+          </div>
+          <div class="module-content">
+            <h2>Package repeated steps as a composite action</h2>
+            <p class="outcome">Outcome: both test jobs reuse one local action for Python setup and database seeding.</p>
+            <p>Create <code>.github/actions/setup-python-env/action.yml</code>, then replace duplicated setup steps with one local <code>uses</code> reference.</p>
+            <div class="comparison">
+              <div><strong>Before</strong><span>Setup Python</span><span>Install dependencies</span><span>Resolve database</span><span>Seed database</span></div>
+              <div><strong>After</strong><code>uses: ./.github/actions/setup-python-env</code></div>
+            </div>
+            <a class="text-link" href="https://github.com/austenstone/pets-workshop/blob/wearedevelopers-na-2026/content/github-actions/7-custom-actions.md" target="_blank" rel="noreferrer">Open exercise 7 instructions</a>
+          </div>
+        </article>
+
+        <article class="module demo-module" id="module-8">
+          <div class="module-meta">
+            <span class="module-number">8</span>
+            <span class="time">6 minutes</span>
+            <span class="format demo">Facilitator demo</span>
+          </div>
+          <div class="module-content">
+            <h2>Reuse entire deployment workflows</h2>
+            <p class="outcome">Outcome: know when to reuse steps and when to reuse complete jobs.</p>
+            <div class="comparison">
+              <div><strong>Composite action</strong><span>Packages steps</span><span>Runs inside a caller job</span><span>Uses the caller's runner</span></div>
+              <div><strong>Reusable workflow</strong><span>Packages jobs</span><span>Called at the job level</span><span>Defines runners and permissions</span></div>
+            </div>
+            <p class="note">This remains a demonstration because deployment credentials and infrastructure exist only in the prepared repository.</p>
+            <a class="text-link" href="https://github.com/austenstone/pets-workshop/blob/wearedevelopers-na-2026/content/github-actions/8-reusable-workflows.md" target="_blank" rel="noreferrer">Read the reusable workflow reference</a>
+          </div>
+        </article>
+
+        <article class="module demo-module" id="module-9">
+          <div class="module-meta">
+            <span class="module-number">9</span>
+            <span class="time">7 minutes</span>
+            <span class="format demo">Facilitator demo</span>
+          </div>
+          <div class="module-content">
+            <h2>Turn CI into an enforced repository rule</h2>
+            <p class="outcome">Outcome: see a pull request blocked until one stable summary check passes.</p>
+            <p>The prepared repository adds a <code>tests-passed</code> summary job, then requires that check through a ruleset targeting the default branch.</p>
+            <ol class="steps compact">
+              <li>Require changes through pull requests.</li>
+              <li>Require the <code>tests-passed</code> status check.</li>
+              <li>Keep required approvals at zero for a solo repository.</li>
+              <li>Observe the merge button unlock only after CI succeeds.</li>
+            </ol>
+            <a class="text-link" href="https://github.com/austenstone/pets-workshop/blob/wearedevelopers-na-2026/content/github-actions/9-required-workflows.md" target="_blank" rel="noreferrer">Read the ruleset exercise</a>
+          </div>
+        </article>
+      </div>
+
+      <section class="finish" aria-labelledby="finish-title">
+        <div>
+          <p class="event-line">10 minutes · Wrap-up and Q&amp;A</p>
+          <h2 id="finish-title">The complete delivery path</h2>
+          <p>You started with source code and finished with automated validation, passwordless deployment, reusable automation, and enforced repository policy.</p>
+        </div>
+        <div class="finish-flow" aria-label="Code moves through pull request, CI, protected main branch, deployment, and production">
+          <span>Code</span><i>→</i><span>Pull request</span><i>→</i><span>CI</span><i>→</i><span>Protected main</span><i>→</i><span>Deploy</span>
+        </div>
+        <div class="finish-actions">
+          <a class="button button-primary" href="https://github.com/austenstone/pets-workshop/tree/wearedevelopers-na-2026/content/github-actions" target="_blank" rel="noreferrer">Keep working through the exercises</a>
+          <a class="button button-secondary" href="https://docs.github.com/actions" target="_blank" rel="noreferrer">GitHub Actions documentation</a>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>GitHub Actions: From CI to CD</span>
+      <a href="#top">Back to top</a>
+    </footer>
+  </body>
+</html>
