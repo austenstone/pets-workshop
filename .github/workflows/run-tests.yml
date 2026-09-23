@@ -12,14 +12,19 @@ permissions:
 jobs:
   test-api:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
 
     steps:
       - uses: actions/checkout@v7
 
-      - name: Set up Python
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v7
         with:
-          python-version: '3.14'
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
 
       - name: Install dependencies
         run: |
@@ -40,6 +45,7 @@ jobs:
         uses: actions/setup-python@v7
         with:
           python-version: '3.14'
+          cache: 'pip'
 
       - name: Install Python dependencies
         run: |
@@ -50,6 +56,8 @@ jobs:
         uses: actions/setup-node@v7
         with:
           node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: 'app/client/package-lock.json'
 
       - name: Install Node dependencies
         working-directory: ./app/client
