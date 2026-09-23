@@ -62,9 +62,10 @@ Let's create a composite action that sets up Python, installs dependencies, and 
       using: 'composite'
       steps:
         - name: Set up Python
-          uses: actions/setup-python@v5
+          uses: actions/setup-python@v7
           with:
             python-version: ${{ inputs.python-version }}
+            cache: 'pip'
 
         - name: Install dependencies
           run: pip install -r app/server/requirements.txt
@@ -72,8 +73,10 @@ Let's create a composite action that sets up Python, installs dependencies, and 
 
         - name: Resolve database path
           id: database
+          env:
+            INPUT_DATABASE_PATH: ${{ inputs.database-path }}
           run: |
-            database_path="${{ inputs.database-path }}"
+            database_path="$INPUT_DATABASE_PATH"
             if [[ "$database_path" != /* ]]; then
               database_path="$GITHUB_WORKSPACE/${database_path#./}"
             fi
@@ -92,6 +95,7 @@ Let's create a composite action that sets up Python, installs dependencies, and 
 
 Review the key parts of the action:
 - **Inputs** provide sensible defaults so callers only need to override what's different.
+- **The Python setup step** preserves the pip cache from the previous exercise.
 - **The path-resolution step** converts a repository-relative input to an absolute path. This matters because the seed command runs from the repository root while the Python tests run from `app/server`.
 - **Outputs** expose that absolute path to the calling workflow so every process opens the same SQLite file.
 - Each `run` step explicitly declares `shell: bash` as required by composite actions.
@@ -164,7 +168,7 @@ Now let's update the CI workflow to use the custom action instead of the individ
             python-version: ['3.12', '3.13', '3.14']
 
         steps:
-          - uses: actions/checkout@v4
+          - uses: actions/checkout@v7
 
           - name: Setup Python environment
             id: seed
@@ -183,7 +187,7 @@ Now let's update the CI workflow to use the custom action instead of the individ
         runs-on: ubuntu-latest
 
         steps:
-          - uses: actions/checkout@v4
+          - uses: actions/checkout@v7
 
           - name: Setup Python environment
             id: seed
@@ -192,9 +196,9 @@ Now let's update the CI workflow to use the custom action instead of the individ
               database-path: app/server/test_dogshelter.db
 
           - name: Set up Node.js
-            uses: actions/setup-node@v4
+            uses: actions/setup-node@v7
             with:
-              node-version: '20'
+              node-version: '24'
               cache: 'npm'
               cache-dependency-path: 'app/client/package-lock.json'
 

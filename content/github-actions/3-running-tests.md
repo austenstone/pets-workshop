@@ -60,10 +60,10 @@ Let's build that out!
         runs-on: ubuntu-latest
 
         steps:
-          - uses: actions/checkout@v4
+          - uses: actions/checkout@v7
 
           - name: Set up Python
-            uses: actions/setup-python@v5
+            uses: actions/setup-python@v7
             with:
               python-version: '3.14'
 
@@ -83,8 +83,8 @@ Let's build that out!
 Notice how this workflow differs from the hello world:
 - It triggers on `push` and `pull_request` events instead of `workflow_dispatch` — so it runs automatically when a PR or merge is made to the specified branch(es).
 - It declares explicit **`permissions`** — we'll explain this next.
-- It uses `actions/checkout@v4` to clone your repository code onto the runner, using the `checkout` action from the marketplace.
-- It uses `actions/setup-python@v5` to install a specific Python version, yet another action from the marketplace.
+- It uses `actions/checkout@v7` to clone your repository code onto the runner, using the `checkout` action from the marketplace.
+- It uses `actions/setup-python@v7` to install a specific Python version, yet another action from the marketplace.
 - Next, it installs the necessary libraries using `pip`, just like you normally would.
 - Finally, it's time to run the tests - again, just like before!
 
@@ -123,10 +123,10 @@ The unit tests cover the API, but the shelter also has Playwright e2e tests that
         runs-on: ubuntu-latest
 
         steps:
-          - uses: actions/checkout@v4
+          - uses: actions/checkout@v7
 
           - name: Set up Python
-            uses: actions/setup-python@v5
+            uses: actions/setup-python@v7
             with:
               python-version: '3.14'
 
@@ -136,9 +136,9 @@ The unit tests cover the API, but the shelter also has Playwright e2e tests that
               pip install -r app/server/requirements.txt
 
           - name: Set up Node.js
-            uses: actions/setup-node@v4
+            uses: actions/setup-node@v7
             with:
-              node-version: '20'
+              node-version: '24'
 
           - name: Install Node dependencies
             working-directory: ./app/client

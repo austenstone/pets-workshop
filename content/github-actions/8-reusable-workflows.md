@@ -116,19 +116,19 @@ Let's extract the shared deploy steps into a reusable workflow. The workflow req
           cancel-in-progress: false
         steps:
           - name: Checkout code
-            uses: actions/checkout@v4
+            uses: actions/checkout@v7
             with:
               ref: ${{ inputs.deploy-ref }}
 
+          - name: Log in with Azure (Federated Credentials)
+            uses: Azure/login@v3
+            with:
+              client-id: ${{ vars.AZURE_CLIENT_ID }}
+              tenant-id: ${{ vars.AZURE_TENANT_ID }}
+              subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
           - name: Install azd
             uses: Azure/setup-azd@v2
-
-          - name: Log in with Azure (Federated Credentials)
-            run: |
-              azd auth login \
-                --client-id "${{ vars.AZURE_CLIENT_ID }}" \
-                --federated-credential-provider "github" \
-                --tenant-id "${{ vars.AZURE_TENANT_ID }}"
 
           - name: Deploy application
             run: azd up --no-prompt
