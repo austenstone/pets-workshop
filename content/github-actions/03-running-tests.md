@@ -190,7 +190,7 @@ Now, let's work to [improve the performance of our CI job][walkthrough-next] by 
 [actions-marketplace]: https://github.com/marketplace?type=actions
 [automatic-token-auth]: https://docs.github.com/actions/security-for-github-actions/security-guides/automatic-token-authentication
 [github-actions-docs]: https://docs.github.com/actions
-[introduction]: 1-introduction.md
+[introduction]: 01-introduction.md
 [jobs-docs]: https://docs.github.com/actions/writing-workflows/choosing-what-your-workflow-does/using-jobs-in-a-workflow
 [marketplace-badges]: https://docs.github.com/actions/how-tos/create-and-publish-actions/publish-in-github-marketplace#about-badges-in-github-marketplace
 [permissions-docs]: https://docs.github.com/actions/writing-workflows/choosing-what-your-workflow-does/assigning-permissions-to-jobs
@@ -198,5 +198,5 @@ Now, let's work to [improve the performance of our CI job][walkthrough-next] by 
 [principle-least-privilege]: https://docs.github.com/actions/security-for-github-actions/security-guides/automatic-token-authentication#permissions-for-the-github_token
 [workflow-syntax]: https://docs.github.com/actions/writing-workflows/workflow-syntax-for-github-actions
 [workflow-triggers]: https://docs.github.com/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows
-[walkthrough-previous]: 2-code-scanning.md
-[walkthrough-next]: 4-caching.md
+[walkthrough-previous]: 02-code-scanning.md
+[walkthrough-next]: 04-caching.md

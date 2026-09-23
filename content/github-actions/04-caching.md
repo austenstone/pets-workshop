@@ -115,5 +115,5 @@ Next, we'll explore [matrix strategies][walkthrough-next] to test across multipl
 [playwright-ci]: https://playwright.dev/docs/ci
 [setup-node]: https://github.com/actions/setup-node
 [setup-python-action]: https://github.com/actions/setup-python
-[walkthrough-previous]: 3-running-tests.md
-[walkthrough-next]: 5-matrix-strategies.md
+[walkthrough-previous]: 03-running-tests.md
+[walkthrough-next]: 05-matrix-strategies.md

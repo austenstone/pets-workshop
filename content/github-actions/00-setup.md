@@ -49,4 +49,4 @@ You've created the repository and opened your chosen workspace — you're ready 
 [template-repo]: https://docs.github.com/repositories/creating-and-managing-repositories/creating-a-template-repository
 [repo-root]: ../..
 [walkthrough-previous]: README.md
-[walkthrough-next]: 1-introduction.md
+[walkthrough-next]: 01-introduction.md

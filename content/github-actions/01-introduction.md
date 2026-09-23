@@ -115,5 +115,5 @@ Next, we'll put this knowledge to work by [securing the development pipeline][wa
 [understanding-actions]: https://docs.github.com/actions/about-github-actions/understanding-github-actions
 [workflow-syntax]: https://docs.github.com/actions/writing-workflows/workflow-syntax-for-github-actions
 [workflow-triggers]: https://docs.github.com/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows
-[walkthrough-previous]: 0-setup.md
-[walkthrough-next]: 2-code-scanning.md
+[walkthrough-previous]: 00-setup.md
+[walkthrough-next]: 02-code-scanning.md

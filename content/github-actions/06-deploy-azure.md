@@ -265,7 +265,7 @@ Next we'll [create custom actions][walkthrough-next] to reduce duplication and m
 [azd-pipeline-definition]: https://learn.microsoft.com/azure/developer/azure-developer-cli/pipeline-create-definition
 [environments-docs]: https://docs.github.com/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments
 [oidc-docs]: https://docs.github.com/actions/security-for-github-actions/security-hardening-your-deployments/about-security-hardening-with-openid-connect
-[running-tests]: 3-running-tests.md
+[running-tests]: 03-running-tests.md
 [workflow-run-docs]: https://docs.github.com/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#workflow_run
-[walkthrough-previous]: 5-matrix-strategies.md
-[walkthrough-next]: 7-custom-actions.md
+[walkthrough-previous]: 05-matrix-strategies.md
+[walkthrough-next]: 07-custom-actions.md

@@ -127,5 +127,5 @@ Matrix strategies let you test across multiple configurations — language versi
 
 [matrix-docs]: https://docs.github.com/actions/using-jobs/using-a-matrix-for-your-jobs
 [strategy-syntax]: https://docs.github.com/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstrategy
-[walkthrough-previous]: 4-caching.md
-[walkthrough-next]: 6-deploy-azure.md
+[walkthrough-previous]: 04-caching.md
+[walkthrough-next]: 06-deploy-azure.md

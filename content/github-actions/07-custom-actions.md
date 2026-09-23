@@ -263,8 +263,8 @@ Next, we'll take reusability to the next level by exploring [reusable workflows]
 [creating-composite-action]: https://docs.github.com/actions/sharing-automations/creating-actions/creating-a-composite-action
 [creating-docker-container-action]: https://docs.github.com/actions/sharing-automations/creating-actions/creating-a-docker-container-action
 [creating-javascript-action]: https://docs.github.com/actions/sharing-automations/creating-actions/creating-a-javascript-action
-[deploy-azure]: 6-deploy-azure.md
+[deploy-azure]: 06-deploy-azure.md
 [metadata-syntax]: https://docs.github.com/actions/sharing-automations/creating-actions/metadata-syntax-for-github-actions
 [skills-reusable-workflows]: https://github.com/skills/reusable-workflows
-[walkthrough-previous]: 6-deploy-azure.md
-[walkthrough-next]: 8-reusable-workflows.md
+[walkthrough-previous]: 06-deploy-azure.md
+[walkthrough-next]: 08-reusable-workflows.md

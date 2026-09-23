@@ -125,5 +125,5 @@ These tools run automatically in the background, catching security issues before
 [supported-secrets]: https://docs.github.com/code-security/secret-scanning/introduction/supported-secret-scanning-patterns
 [skills-supply-chain]: https://github.com/skills/secure-repository-supply-chain
 [skills-secure-code]: https://github.com/skills/secure-code-game
-[walkthrough-previous]: 1-introduction.md
-[walkthrough-next]: 3-running-tests.md
+[walkthrough-previous]: 01-introduction.md
+[walkthrough-next]: 03-running-tests.md

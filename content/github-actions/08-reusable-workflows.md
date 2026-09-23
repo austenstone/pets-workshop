@@ -240,5 +240,5 @@ Next, we'll ensure quality gates are enforced with [branch protection, required 
 [sharing-workflows]: https://docs.github.com/actions/how-tos/reuse-automations/reuse-workflows#sharing-workflows
 [skills-reusable-workflows]: https://github.com/skills/reusable-workflows
 [workflow-call-event]: https://docs.github.com/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#workflow_call
-[walkthrough-previous]: 7-custom-actions.md
-[walkthrough-next]: 9-required-workflows.md
+[walkthrough-previous]: 07-custom-actions.md
+[walkthrough-next]: 09-required-workflows.md

@@ -93,6 +93,8 @@ Use these fallbacks in order:
 
 Repositories created from a template receive the default branch contents, not the source repository's other branches. The `workshop-checkpoint-*` branches are facilitator recovery refs in `austenstone/pets-workshop`; they will not appear automatically in an attendee repository.
 
+Checkpoint recovery copies the workflow and action paths listed below, so it does not depend on guide filenames. Some older checkpoint branches retain the legacy `0-...md` through `9-...md` guide names; use the zero-padded `00-...md` through `09-...md` files on `main` for current attendee navigation.
+
 Use path-scoped recovery so the attendee keeps their repository history and unrelated work:
 
 1. Preserve the attendee's current work before changing files:

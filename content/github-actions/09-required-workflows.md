@@ -121,7 +121,7 @@ Let's verify the ruleset is working.
 
 ## Organizational required workflows
 
-Organization-wide rulesets can mandate that specific workflows run across all repositories. This pairs naturally with the reusable workflows you built in the [previous exercise](8-reusable-workflows.md) — an organization could create a reusable security-scanning workflow in a central `.github` repository, then enforce it via a ruleset so every PR across the organization runs it automatically.
+Organization-wide rulesets can mandate that specific workflows run across all repositories. This pairs naturally with the reusable workflows you built in the [previous exercise](08-reusable-workflows.md) — an organization could create a reusable security-scanning workflow in a central `.github` repository, then enforce it via a ruleset so every PR across the organization runs it automatically.
 
 > [!NOTE]
 > Organization-wide rulesets are available on GitHub Team and GitHub Enterprise plans. For personal repositories on the Free plan, repository-level rulesets (as configured above) provide similar enforcement at the repo level.
@@ -179,5 +179,5 @@ If you want to keep exploring, here are some suggested next steps:
 [larger-runners]: https://docs.github.com/actions/using-github-hosted-runners/using-larger-runners
 [skills-deploy-azure]: https://github.com/skills/deploy-to-azure
 [workflow-dispatch]: https://docs.github.com/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#workflow_dispatch
-[walkthrough-previous]: 8-reusable-workflows.md
+[walkthrough-previous]: 08-reusable-workflows.md
 [walkthrough-next]: README.md
