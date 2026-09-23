@@ -1,0 +1,357 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-22T19:14:33.576Z",
+  "title": "Design System: Tailspin Shelter",
+  "extensions": {
+    "colorMeta": {
+      "deep-night": {
+        "role": "neutral",
+        "displayName": "Deep Night",
+        "canonical": "#080d18",
+        "tonalRamp": ["#020617", "#080d18", "#0f172a", "#1e293b", "#475569", "#94a3b8", "#cbd5e1", "#f8fafc"]
+      },
+      "night-field": {
+        "role": "neutral",
+        "displayName": "Night Field",
+        "canonical": "#0f172a",
+        "tonalRamp": ["#020617", "#080d18", "#0f172a", "#1e293b", "#475569", "#94a3b8", "#cbd5e1", "#f8fafc"]
+      },
+      "raised-slate": {
+        "role": "neutral",
+        "displayName": "Raised Slate",
+        "canonical": "#151f34",
+        "tonalRamp": ["#020617", "#080d18", "#151f34", "#273449", "#475569", "#94a3b8", "#cbd5e1", "#f8fafc"]
+      },
+      "instruction-plate": {
+        "role": "neutral",
+        "displayName": "Instruction Plate",
+        "canonical": "#1e293b",
+        "tonalRamp": ["#020617", "#0f172a", "#1e293b", "#334155", "#64748b", "#94a3b8", "#cbd5e1", "#f8fafc"]
+      },
+      "structural-line": {
+        "role": "neutral",
+        "displayName": "Structural Line",
+        "canonical": "#334155",
+        "tonalRamp": ["#020617", "#0f172a", "#1e293b", "#334155", "#64748b", "#94a3b8", "#cbd5e1", "#f8fafc"]
+      },
+      "muted-slate": {
+        "role": "neutral",
+        "displayName": "Muted Slate",
+        "canonical": "#64748b",
+        "tonalRamp": ["#020617", "#0f172a", "#1e293b", "#334155", "#64748b", "#94a3b8", "#cbd5e1", "#f8fafc"]
+      },
+      "body-slate": {
+        "role": "neutral",
+        "displayName": "Body Slate",
+        "canonical": "#cbd5e1",
+        "tonalRamp": ["#020617", "#0f172a", "#1e293b", "#334155", "#64748b", "#94a3b8", "#cbd5e1", "#f8fafc"]
+      },
+      "quiet-bone": {
+        "role": "neutral",
+        "displayName": "Quiet Bone",
+        "canonical": "#e2e8f0",
+        "tonalRamp": ["#020617", "#0f172a", "#334155", "#64748b", "#94a3b8", "#cbd5e1", "#e2e8f0", "#f8fafc"]
+      },
+      "bone": {
+        "role": "neutral",
+        "displayName": "Bone",
+        "canonical": "#f8fafc",
+        "tonalRamp": ["#020617", "#0f172a", "#334155", "#64748b", "#94a3b8", "#cbd5e1", "#e2e8f0", "#f8fafc"]
+      },
+      "cobalt-deep": {
+        "role": "primary",
+        "displayName": "Cobalt Deep",
+        "canonical": "#1d4ed8",
+        "tonalRamp": ["#172554", "#1e3a8a", "#1e40af", "#1d4ed8", "#2563eb", "#60a5fa", "#bfdbfe", "#eff6ff"]
+      },
+      "cobalt-action": {
+        "role": "primary",
+        "displayName": "Cobalt Action",
+        "canonical": "#2563eb",
+        "tonalRamp": ["#172554", "#1e3a8a", "#1e40af", "#1d4ed8", "#2563eb", "#60a5fa", "#bfdbfe", "#eff6ff"]
+      },
+      "route-blue": {
+        "role": "primary",
+        "displayName": "Route Blue",
+        "canonical": "#60a5fa",
+        "tonalRamp": ["#172554", "#1e3a8a", "#1e40af", "#2563eb", "#60a5fa", "#93c5fd", "#bfdbfe", "#eff6ff"]
+      },
+      "link-blue": {
+        "role": "primary",
+        "displayName": "Link Blue",
+        "canonical": "#93c5fd",
+        "tonalRamp": ["#172554", "#1e3a8a", "#1d4ed8", "#2563eb", "#60a5fa", "#93c5fd", "#dbeafe", "#eff6ff"]
+      },
+      "demo-violet": {
+        "role": "secondary",
+        "displayName": "Demo Violet",
+        "canonical": "#a78bfa",
+        "tonalRamp": ["#2e1065", "#4c1d95", "#6d28d9", "#7c3aed", "#8b5cf6", "#a78bfa", "#ddd6fe", "#f5f3ff"]
+      },
+      "success-green": {
+        "role": "tertiary",
+        "displayName": "Success Green",
+        "canonical": "#4ade80",
+        "tonalRamp": ["#052e16", "#14532d", "#166534", "#16a34a", "#22c55e", "#4ade80", "#bbf7d0", "#f0fdf4"]
+      },
+      "checkpoint-amber": {
+        "role": "tertiary",
+        "displayName": "Checkpoint Amber",
+        "canonical": "#fcd34d",
+        "tonalRamp": ["#451a03", "#78350f", "#92400e", "#d97706", "#f59e0b", "#fcd34d", "#fde68a", "#fffbeb"]
+      },
+      "danger-red": {
+        "role": "tertiary",
+        "displayName": "Danger Red",
+        "canonical": "#f87171",
+        "tonalRamp": ["#450a0a", "#7f1d1d", "#991b1b", "#dc2626", "#ef4444", "#f87171", "#fecaca", "#fef2f2"]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Workshop Display",
+        "purpose": "One short workshop promise or rare high-impact statement."
+      },
+      "headline": {
+        "displayName": "Section Headline",
+        "purpose": "Workshop modules and major page sections."
+      },
+      "title": {
+        "displayName": "Object Title",
+        "purpose": "Application records, cards, and compact content groups."
+      },
+      "body": {
+        "displayName": "Instruction Body",
+        "purpose": "Default explanations, application copy, and workshop steps."
+      },
+      "lead": {
+        "displayName": "Lead Promise",
+        "purpose": "Page-level context beneath a display heading."
+      },
+      "label": {
+        "displayName": "Route Label",
+        "purpose": "Timing, participation mode, navigation state, and compact metadata."
+      },
+      "mono": {
+        "displayName": "Technical Mono",
+        "purpose": "Commands, workflow names, file paths, versions, and keyboard values."
+      }
+    },
+    "shadows": [
+      {
+        "name": "sticky-chrome",
+        "value": "0 0.75rem 2rem rgba(0, 0, 0, 0.2)",
+        "purpose": "Separates the workshop's persistent header from scrolling instruction plates."
+      },
+      {
+        "name": "cobalt-action-glow",
+        "value": "0 0.6rem 1.5rem rgba(37, 99, 235, 0.25)",
+        "purpose": "Supports the primary workshop setup action."
+      },
+      {
+        "name": "app-card-rest",
+        "value": "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)",
+        "purpose": "Provides modest object separation for application cards."
+      },
+      {
+        "name": "app-card-hover",
+        "value": "0 20px 25px -5px rgba(37, 99, 235, 0.1), 0 8px 10px -6px rgba(37, 99, 235, 0.1)",
+        "purpose": "Pairs with a small upward translation for clickable application records."
+      },
+      {
+        "name": "core-instruction-rail",
+        "value": "inset 0.35rem 0 #60a5fa",
+        "purpose": "Marks the core hands-on workshop module without lifting its plate."
+      },
+      {
+        "name": "demo-instruction-rail",
+        "value": "inset 0.35rem 0 #a78bfa",
+        "purpose": "Marks facilitator demonstration modules."
+      }
+    ],
+    "motion": [
+      {
+        "name": "app-interaction",
+        "value": "300ms ease",
+        "purpose": "App card lift, border, gradient, and arrow transitions."
+      },
+      {
+        "name": "route-scroll",
+        "value": "smooth",
+        "purpose": "Keeps guide navigation aligned with the current workshop module."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "0.01ms",
+        "purpose": "Effectively removes non-essential animation when reduced motion is requested."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "compact",
+        "value": "40rem"
+      },
+      {
+        "name": "guide-collapse",
+        "value": "56rem"
+      },
+      {
+        "name": "app-sm",
+        "value": "640px"
+      },
+      {
+        "name": "app-lg",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Guide Primary Action",
+      "kind": "button",
+      "refersTo": "guide-button-primary",
+      "description": "The immediate next action in the attendee guide.",
+      "html": "<a class=\"ds-guide-primary\" href=\"#\">Start setup</a>",
+      "css": ".ds-guide-primary { display: inline-flex; min-height: 3rem; align-items: center; justify-content: center; padding: 0.7rem 1.15rem; background: #2563eb; border: 1px solid #2563eb; border-radius: 0; color: #f8fafc; font: 800 0.8rem/1.2 ui-sans-serif, system-ui, sans-serif; text-decoration: none; box-shadow: 0 0.6rem 1.5rem rgba(37, 99, 235, 0.25); } .ds-guide-primary:hover { background: #1d4ed8; } .ds-guide-primary:focus-visible { outline: 3px solid #fcd34d; outline-offset: 4px; }"
+    },
+    {
+      "name": "Guide Secondary Action",
+      "kind": "button",
+      "refersTo": "guide-button-secondary",
+      "description": "A lower-priority guide action that remains part of the flat route language.",
+      "html": "<a class=\"ds-guide-secondary\" href=\"#\">Create your repository</a>",
+      "css": ".ds-guide-secondary { display: inline-flex; min-height: 3rem; align-items: center; justify-content: center; padding: 0.7rem 1.15rem; background: transparent; border: 1px solid #64748b; border-radius: 0; color: #f8fafc; font: 800 0.8rem/1.2 ui-sans-serif, system-ui, sans-serif; text-decoration: none; } .ds-guide-secondary:hover { border-color: #60a5fa; } .ds-guide-secondary:focus-visible { outline: 3px solid #fcd34d; outline-offset: 4px; }"
+    },
+    {
+      "name": "App Primary Action",
+      "kind": "button",
+      "refersTo": "app-button-primary",
+      "description": "A familiar rounded action for ordinary Tailspin application screens.",
+      "html": "<a class=\"ds-app-primary\" href=\"#\">Back to Dogs</a>",
+      "css": ".ds-app-primary { display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; background: #2563eb; border: 0; border-radius: 0.5rem; color: #f8fafc; font: 400 1rem/1.65 ui-sans-serif, system-ui, sans-serif; text-decoration: none; transition: background 300ms ease, box-shadow 300ms ease; } .ds-app-primary:hover { background: #1d4ed8; box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2); } .ds-app-primary:focus-visible { outline: 3px solid #fcd34d; outline-offset: 4px; }"
+    },
+    {
+      "name": "Workshop Route Step",
+      "kind": "nav",
+      "description": "A compact route control showing the current module in persistent workshop navigation.",
+      "html": "<nav class=\"ds-route-nav\" aria-label=\"Workshop modules\"><a href=\"#\">Setup</a><a class=\"ds-current\" href=\"#\" aria-current=\"step\">3</a><a href=\"#\">4</a></nav>",
+      "css": ".ds-route-nav { display: flex; align-items: center; gap: 0.2rem; padding: 0.65rem; background: #080d18; border-bottom: 1px solid #334155; } .ds-route-nav a { display: grid; place-items: center; min-width: 2.15rem; height: 2.15rem; padding: 0 0.5rem; border: 1px solid transparent; color: #cbd5e1; font: 800 0.8rem/1.2 ui-sans-serif, system-ui, sans-serif; text-decoration: none; } .ds-route-nav a:hover { border-color: #60a5fa; color: #f8fafc; } .ds-route-nav a.ds-current { background: #2563eb; border-color: #60a5fa; color: #f8fafc; } .ds-route-nav a:focus-visible { outline: 3px solid #fcd34d; outline-offset: 4px; }"
+    },
+    {
+      "name": "Workshop Module Plate",
+      "kind": "custom",
+      "refersTo": "module-plate",
+      "description": "The guide's grounded teaching structure: sticky metadata beside one continuous instruction column.",
+      "html": "<article class=\"ds-module\"><div class=\"ds-module-meta\"><span class=\"ds-number\">3</span><span class=\"ds-time\">25 minutes</span><span class=\"ds-format\">Core hands-on</span></div><div class=\"ds-module-content\"><h2>Run Python and browser tests in parallel</h2><p class=\"ds-outcome\">Outcome: every push and pull request runs both test suites.</p><p>Create two independent jobs and let them run simultaneously.</p></div></article>",
+      "css": ".ds-module { display: grid; grid-template-columns: 12rem minmax(0, 1fr); gap: clamp(2rem, 7vw, 7rem); padding: clamp(4rem, 8vw, 7rem) max(1rem, calc((100vw - 78rem) / 2)); background: #0f172a; border-bottom: 1px solid #334155; box-shadow: inset 0.35rem 0 #60a5fa; color: #cbd5e1; font-family: ui-sans-serif, system-ui, sans-serif; } .ds-module-meta { display: flex; flex-direction: column; align-items: flex-start; gap: 0.75rem; } .ds-number { color: #60a5fa; font-size: 4.5rem; font-weight: 820; letter-spacing: -0.06em; line-height: 0.9; } .ds-time { color: #f8fafc; font-size: 0.82rem; font-weight: 800; } .ds-format { padding: 0.28rem 0.55rem; border: 1px solid #93c5fd; color: #93c5fd; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; } .ds-module-content { max-width: 72ch; } .ds-module h2 { margin: 0; color: #f8fafc; font-size: clamp(2rem, 4vw, 3.25rem); font-weight: 820; letter-spacing: -0.035em; line-height: 1.08; } .ds-module p { line-height: 1.65; } .ds-outcome { color: #93c5fd; font-size: 1.12rem; font-weight: 700; } @media (max-width: 56rem) { .ds-module { grid-template-columns: 1fr; gap: 1.75rem; } .ds-module-meta { flex-direction: row; align-items: center; flex-wrap: wrap; } }"
+    },
+    {
+      "name": "Workshop Recovery Callout",
+      "kind": "custom",
+      "description": "A visible recovery path that keeps a delayed attendee in the workshop.",
+      "html": "<div class=\"ds-recovery\"><strong>Blocked?</strong><span>Pair with the person beside you and recover the exact workflow.</span></div>",
+      "css": ".ds-recovery { display: grid; grid-template-columns: auto 1fr; gap: 1rem; margin: 1.8rem 0; padding: 1rem 1.1rem; background: #1e293b; border: 1px solid #64748b; border-radius: 0; color: #cbd5e1; font: 400 1rem/1.65 ui-sans-serif, system-ui, sans-serif; } .ds-recovery strong { color: #fcd34d; } @media (max-width: 40rem) { .ds-recovery { grid-template-columns: 1fr; gap: 0.25rem; } }"
+    },
+    {
+      "name": "Tailspin Dog Card",
+      "kind": "card",
+      "refersTo": "app-card",
+      "description": "A rounded, independently selectable application record with restrained hover lift.",
+      "html": "<a class=\"ds-dog-card\" href=\"#\"><h3>Luna</h3><p>Australian Shepherd</p><span>View details →</span></a>",
+      "css": ".ds-dog-card { display: block; overflow: hidden; padding: 1.5rem; background: rgba(30, 41, 59, 0.6); border: 1px solid rgba(51, 65, 85, 0.5); border-radius: 0.75rem; color: #cbd5e1; font-family: ui-sans-serif, system-ui, sans-serif; text-decoration: none; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); transition: transform 300ms ease, border-color 300ms ease, box-shadow 300ms ease; } .ds-dog-card h3 { margin: 0 0 0.5rem; color: #f1f5f9; font-size: 1.25rem; } .ds-dog-card p { margin: 0 0 1rem; color: #94a3b8; } .ds-dog-card span { color: #60a5fa; font-size: 0.875rem; font-weight: 500; } .ds-dog-card:hover { transform: translateY(-6px); border-color: rgba(59, 130, 246, 0.5); box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.1); } .ds-dog-card:hover h3 { color: #60a5fa; } .ds-dog-card:focus-visible { outline: 3px solid #fcd34d; outline-offset: 4px; }"
+    },
+    {
+      "name": "Availability Status Chip",
+      "kind": "chip",
+      "refersTo": "status-chip",
+      "description": "A semantic application status, never a decorative brand accent.",
+      "html": "<span class=\"ds-status-available\">Available</span>",
+      "css": ".ds-status-available { display: inline-flex; padding: 0.25rem 0.75rem; background: rgba(34, 197, 94, 0.2); border-radius: 9999px; color: #4ade80; font: 400 0.875rem/1.25 ui-sans-serif, system-ui, sans-serif; }"
+    },
+    {
+      "name": "Tailspin App Header",
+      "kind": "nav",
+      "description": "The simple cobalt application shell for the shelter experience.",
+      "html": "<header class=\"ds-app-header\"><a class=\"ds-app-brand\" href=\"#\">Tailspin Shelter</a><nav><a href=\"#\">Home</a><a href=\"#\">About</a></nav></header>",
+      "css": ".ds-app-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem; background: #1d4ed8; color: #f8fafc; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); font-family: ui-sans-serif, system-ui, sans-serif; } .ds-app-header a { color: inherit; text-decoration: none; } .ds-app-header a:hover { text-decoration: underline; } .ds-app-header a:focus-visible { outline: 3px solid #fcd34d; outline-offset: 4px; } .ds-app-brand { font-size: 1.25rem; font-weight: 700; } .ds-app-header nav { display: flex; gap: 1rem; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Tailspin Flight Plan",
+    "overview": "Tailspin is a practical, technical world built from a deep slate field, decisive cobalt actions, bone-white headings, and thin structural lines. It should feel capable and instructional rather than corporate or decorative: information is arranged so a person can understand the current state, take the next action, and recover when something goes wrong.\n\nThe system has two related expressions. The Tailspin Shelter application uses familiar app conventions: centered content, rounded containers, responsive card grids, semantic status chips, and modest hover lift. The attendee workshop guide uses the same palette and type character in a stricter reading mode: a persistent route, flat full-width instruction plates, square actions, and visible outcome checkpoints. The guide's sticky timeline rail and module composition are surface-specific teaching tools, not a template for every Tailspin screen.",
+    "keyCharacteristics": [
+      "Slate fields establish one continuous dark environment.",
+      "Cobalt identifies primary actions, active route state, and instructional emphasis.",
+      "Bone headings and restrained body contrast keep dense technical content readable.",
+      "Thin borders and route lines explain structure before shadows do.",
+      "App screens may use rounded, lifted cards; workshop instruction plates stay flat and grounded.",
+      "Surface composition follows the task while the palette, typography, contrast, and directness remain shared."
+    ],
+    "rules": [
+      {
+        "name": "The One Cobalt Voice Rule",
+        "body": "Use cobalt for action and orientation; violet, green, amber, and red communicate specific meaning and must not become alternate brand accents.",
+        "section": "colors"
+      },
+      {
+        "name": "The Slate Continuity Rule",
+        "body": "Major surfaces remain in the slate family. A new hue must carry semantic information, not merely separate one section from another.",
+        "section": "colors"
+      },
+      {
+        "name": "The Native Clarity Rule",
+        "body": "Do not add a display face for personality alone. Tailspin earns character through confident hierarchy and exact instructional language.",
+        "section": "typography"
+      },
+      {
+        "name": "The Short Promise Rule",
+        "body": "Large display text carries one outcome, not a paragraph; supporting detail belongs in the lead or body tier.",
+        "section": "typography"
+      },
+      {
+        "name": "The Composition Belongs to the Task Rule",
+        "body": "Reuse Tailspin's visual language across surfaces, but do not copy the workshop's sticky rail and full-width module plates into ordinary application screens.",
+        "section": "layout"
+      },
+      {
+        "name": "The Route Must Survive Mobile Rule",
+        "body": "Preserve order, current position, and next action when columns collapse; responsive behavior may simplify geometry but never the learning sequence.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat Instruction Rule",
+        "body": "Workshop content is grounded at rest. Do not turn modules, steps, or comparisons into a decorative grid of floating cards.",
+        "section": "elevation"
+      },
+      {
+        "name": "The App Object Rule",
+        "body": "Elevation is acceptable when it distinguishes an interactive application object; it is not a generic way to make every section feel important.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Scoped Corners Rule",
+        "body": "Rounded app cards are not evidence that workshop modules should be rounded, and square workshop plates are not a mandate to flatten familiar application controls.",
+        "section": "shapes"
+      },
+      {
+        "name": "The Circle Means Position Rule",
+        "body": "In the guide, circles belong to route nodes. Do not scatter circular decoration through unrelated content.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "Do keep slate, cobalt, bone, and thin structural lines consistent across the app and guide.",
+      "Do choose the composition that matches the task: scan-friendly cards for application records, continuous plates and a persistent route for live instruction.",
+      "Do make the current state, next action, and recovery path visually explicit.",
+      "Do preserve visible focus, semantic color meaning, readable line length, reduced-motion behavior, and mobile route order.",
+      "Do reserve violet for facilitator demonstrations and amber for focus or recovery attention."
+    ],
+    "donts": [
+      "Don't force the attendee guide's sticky rail or full-width module composition onto every Tailspin application screen.",
+      "Don't turn workshop modules into a decorative grid of rounded cards, gradients, and hover effects.",
+      "Don't flatten app records into anonymous full-width bands when independent objects need scanning and selection.",
+      "Don't introduce competing accent colors or use semantic colors as general decoration.",
+      "Don't hide essential instruction behind animation, hover-only behavior, or low-contrast glass effects."
+    ]
+  }
+}

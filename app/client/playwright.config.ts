@@ -1,10 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const serverDir = path.resolve(__dirname, '..', 'server');
-const testDbPath = path.join(serverDir, 'e2e_test_dogshelter.db');
 const flaskPort = 5100;
 const astroDevPort = 4321;
 

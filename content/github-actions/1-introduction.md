@@ -27,7 +27,7 @@ A workflow file is written in YAML and lives in the `.github/workflows/` directo
 - `jobs`: Contains one or more jobs, each with a unique identifier.
   - `runs-on`: Specifies the runner environment (e.g., `ubuntu-latest`).
   - `steps`: An ordered list of tasks the job performs.
-    - `uses`: References a reusable action (e.g., `actions/checkout@v4`).
+    - `uses`: References a reusable action (e.g., `actions/checkout@v7`).
     - `run`: Executes a shell command.
 
 ## Create your first workflow

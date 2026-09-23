@@ -3,11 +3,11 @@
 | [← Reusable Workflows][walkthrough-previous] | [Next: GitHub Actions section overview →][walkthrough-next] |
 |:-----------------------------------|------------------------------------------:|
 
-Building a CI/CD pipeline is only half the battle — you also need to enforce it. Repository rulesets ensure that code can't be merged without passing checks and getting reviewed. Required workflows go further, allowing organizations to mandate specific workflows across all repositories. In this final exercise, you'll configure a ruleset on `main`, explore required workflows, and wrap up the workshop.
+Building a CI/CD pipeline is only half the battle — you also need to enforce it. Repository rulesets ensure that code can't be merged without passing checks and, on a collaborative repository, required reviews. Required workflows go further, allowing organizations to mandate specific workflows across all repositories. In this final exercise, you'll configure a ruleset on `main`, explore required workflows, and wrap up the workshop.
 
 ## Scenario
 
-The shelter's CI/CD pipeline is comprehensive, but nothing currently prevents someone from merging code without passing CI — meaning untested code could reach `main` and trigger a deployment. The organization also wants to ensure all repositories run security scanning. Let's lock things down with rulesets and explore how required workflows enforce standards at scale.
+The shelter's CI/CD pipeline is comprehensive, but nothing currently prevents someone from merging code without passing CI — meaning untested code could reach `main` and trigger a deployment. The organization also wants to ensure all repositories run security scanning. Let's lock things down with a solo-safe ruleset and explore how required workflows enforce standards at scale.
 
 ## Background
 
@@ -66,7 +66,7 @@ The `if: always()` ensures this job runs even when upstream jobs fail, so it can
 
 ## Create a ruleset for `main`
 
-Let's create a ruleset that requires our tests to pass, and pull requests to be reviewed, before merging to `main`.
+Let's create a ruleset that requires our tests to pass and changes to arrive through pull requests before merging to `main`. A solo repository owner cannot approve their own pull request, so the attendee path uses zero required approvals.
 
 1. Navigate to your repository on GitHub.
 2. Select **Settings**, then in the left sidebar under **Code and automation**, expand **Rules** and select **Rulesets**.
@@ -78,7 +78,7 @@ Let's create a ruleset that requires our tests to pass, and pull requests to be 
 
     | Rule | Configuration |
     |------|--------------|
-    | **Require a pull request before merging** | Set **Required approvals** to `1` |
+    | **Require a pull request before merging** | Set **Required approvals** to `0` |
     | **Require status checks to pass** | Check **Require branches to be up to date before merging**, then add `tests-passed` as a required check |
     | **Block force pushes** | *(enabled by default)* |
 
@@ -89,6 +89,9 @@ Let's create a ruleset that requires our tests to pass, and pull requests to be 
 
 > [!NOTE]
 > You can start a ruleset in **Disabled** mode to test it before enforcing. This lets you preview which PRs would be blocked without actually blocking anyone.
+
+> [!TIP]
+> If you are paired with a collaborator who has write access, set **Required approvals** to `1` and have your partner review the test pull request. Solo attendees should keep it at `0`; otherwise they will lock themselves out of merging.
 
 ## Test the ruleset
 
@@ -105,8 +108,8 @@ Let's verify the ruleset is working.
     ```
 
 2. Navigate to your repository on GitHub and create a pull request from `test-ruleset` to `main`.
-3. Observe that the **Merge pull request** button is disabled — the required status checks must pass and the PR needs an approving review.
-4. Watch the CI workflow run. Even after all checks pass, the merge button remains disabled until the review requirement is satisfied.
+3. Observe that the **Merge pull request** button is disabled while the required status checks are pending.
+4. Watch the CI workflow run. After all checks pass, the merge button becomes available. If you chose the collaborator alternative with one required approval, it remains disabled until your partner approves.
 5. You can close the pull request — the important thing is that the ruleset is enforced!
 
 > [!IMPORTANT]
@@ -138,7 +141,7 @@ Congratulations! You've built a complete CI/CD pipeline for the pet shelter appl
 - **Custom actions**: Encapsulated Python setup and database seeding into a reusable composite action, eliminating duplication across jobs.
 - **Reusable workflows**: Extracted the deployment pattern into a callable workflow template, shared by both the automated CD pipeline and a manual deploy workflow for rollbacks.
 - **Manual deployment**: Added on-demand deployment capability for rollbacks and hotfixes, using `workflow_dispatch` with a git ref input.
-- **Rulesets**: Enforced quality gates so code can't be merged without passing CI checks and peer review — the production safeguard that ensures only validated code gets deployed.
+- **Rulesets**: Enforced quality gates so code can't be merged without passing CI checks. Paired attendees also practiced a peer-review requirement.
 
 This pipeline follows the same patterns used by teams across GitHub. As the shelter's application grows, this foundation will scale with it.
 
