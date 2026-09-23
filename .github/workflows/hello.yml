@@ -1,0 +1,18 @@
+name: Hello World
+
+on:
+  workflow_dispatch:
+
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Say hello
+        run: echo "Hello, GitHub Actions!"
+
+      - name: Show environment info
+        run: |
+          echo "Runner OS: $RUNNER_OS"
+          echo "Repository: $GITHUB_REPOSITORY"
+          echo "Triggered by: $GITHUB_ACTOR"
