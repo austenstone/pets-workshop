@@ -138,7 +138,7 @@ The unit tests cover the API, but the shelter also has Playwright e2e tests that
           - name: Set up Node.js
             uses: actions/setup-node@v4
             with:
-              node-version: '20'
+              node-version: '24'
 
           - name: Install Node dependencies
             working-directory: ./app/client
