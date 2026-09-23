@@ -1,0 +1,20 @@
+name: Deploy App
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Run Tests"]
+    branches: [main]
+    types: [completed]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    uses: ./.github/workflows/reusable-deploy.yml
+    with:
+      deploy-ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
+    secrets: inherit

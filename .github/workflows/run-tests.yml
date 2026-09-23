@@ -65,3 +65,15 @@ jobs:
         run: npx playwright test
         env:
           DATABASE_PATH: ${{ steps.seed.outputs.database-file }}
+
+  tests-passed:
+    if: always()
+    needs: [test-api, test-e2e]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check results
+        run: |
+          if [[ "${{ needs.test-api.result }}" != "success" || "${{ needs.test-e2e.result }}" != "success" ]]; then
+            echo "One or more jobs failed"
+            exit 1
+          fi

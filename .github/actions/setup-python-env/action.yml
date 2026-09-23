@@ -23,7 +23,6 @@ runs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ inputs.python-version }}
-        cache: 'pip'
 
     - name: Install dependencies
       run: pip install -r app/server/requirements.txt
@@ -31,10 +30,8 @@ runs:
 
     - name: Resolve database path
       id: database
-      env:
-        INPUT_DATABASE_PATH: ${{ inputs.database-path }}
       run: |
-        database_path="$INPUT_DATABASE_PATH"
+        database_path="${{ inputs.database-path }}"
         if [[ "$database_path" != /* ]]; then
           database_path="$GITHUB_WORKSPACE/${database_path#./}"
         fi
