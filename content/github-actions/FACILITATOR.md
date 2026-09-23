@@ -2,6 +2,9 @@
 
 This guide runs the workshop as a 120-minute local event. The attendee path is hands-on through CI, then uses a prepared facilitator demonstration for Azure.
 
+> [!NOTE]
+> Workshop workflows and snippets intentionally use the latest stable major action tags so attendees see readable, current examples. `zizmor` will report unpinned action references; that advisory is an accepted demo tradeoff, not a clean-security claim.
+
 ## Prerequisites
 
 Complete these checks before attendees arrive:
