@@ -40,7 +40,7 @@ jobs:
           grep -F 'id-token: write' .github/workflows/manual-deploy.yml
           grep -F 'uses: Azure/login@v3' .github/workflows/reusable-deploy.yml
           grep -F 'uses: Azure/setup-azd@v2' .github/workflows/reusable-deploy.yml
-          grep -F \"cache: 'pip'\" .github/actions/setup-python-env/action.yml
+          grep -F "cache: 'pip'" .github/actions/setup-python-env/action.yml
           grep -F 'INPUT_DATABASE_PATH:' .github/actions/setup-python-env/action.yml
 
   test-api:
