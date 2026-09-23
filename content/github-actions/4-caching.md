@@ -26,7 +26,7 @@ Many popular setup actions have caching built right in. Let's start with the `te
 
     ```yaml
           - name: Set up Python
-            uses: actions/setup-python@v5
+            uses: actions/setup-python@v7
             with:
               python-version: '3.14'
               cache: 'pip'
@@ -45,7 +45,7 @@ The e2e job has two dependencies to cache — Python packages and the Node modul
 
     ```yaml
           - name: Set up Python
-            uses: actions/setup-python@v5
+            uses: actions/setup-python@v7
             with:
               python-version: '3.14'
               cache: 'pip'
@@ -55,7 +55,7 @@ The e2e job has two dependencies to cache — Python packages and the Node modul
 
     ```yaml
           - name: Set up Node.js
-            uses: actions/setup-node@v4
+            uses: actions/setup-node@v7
             with:
               node-version: '24'
               cache: 'npm'

@@ -139,19 +139,19 @@ Let's create a workflow that:
           cancel-in-progress: false
 
         steps:
-          - uses: actions/checkout@v4
+          - uses: actions/checkout@v7
             with:
               ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
 
+          - name: Log in with Azure (Federated Credentials)
+            uses: Azure/login@v3
+            with:
+              client-id: ${{ vars.AZURE_CLIENT_ID }}
+              tenant-id: ${{ vars.AZURE_TENANT_ID }}
+              subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+
           - name: Install azd
             uses: Azure/setup-azd@v2
-
-          - name: Log in with Azure (Federated Credentials)
-            run: |
-              azd auth login \
-                --client-id "${{ vars.AZURE_CLIENT_ID }}" \
-                --federated-credential-provider "github" \
-                --tenant-id "${{ vars.AZURE_TENANT_ID }}"
 
           - name: Provision and deploy
             run: azd up --no-prompt
@@ -166,6 +166,7 @@ Let's create a workflow that:
 Let's walk through the key parts:
 
 - **`permissions: id-token: write`** — In the [Running Tests][running-tests] module you set `contents: read`. Here, `id-token: write` is added because the workflow needs to request OIDC tokens from Azure. This is how passwordless authentication works — no stored credentials, just short-lived tokens.
+- **`azure/login`** — Uses the repository's OIDC variables to authenticate with Azure without a password or a hand-written login command.
 - **`vars.*`** — Variables like `${{ vars.AZURE_CLIENT_ID }}` reference **repository variables** that `azd pipeline config` will create for you in the next step.
 - **`workflow_run`** triggers this workflow whenever the **Run Tests** workflow completes on `main`. The `if` condition ensures it only proceeds when tests **succeeded** — or when triggered manually via `workflow_dispatch`.
 - **`actions/checkout`** checks out `github.event.workflow_run.head_sha` for automated deployments, ensuring the deployed commit is the exact commit that passed CI. A manual run checks out the commit selected for that run.

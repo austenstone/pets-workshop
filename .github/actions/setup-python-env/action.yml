@@ -20,9 +20,10 @@ runs:
   using: 'composite'
   steps:
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v7
       with:
         python-version: ${{ inputs.python-version }}
+        cache: 'pip'
 
     - name: Install dependencies
       run: pip install -r app/server/requirements.txt
@@ -30,8 +31,10 @@ runs:
 
     - name: Resolve database path
       id: database
+      env:
+        INPUT_DATABASE_PATH: ${{ inputs.database-path }}
       run: |
-        database_path="${{ inputs.database-path }}"
+        database_path="$INPUT_DATABASE_PATH"
         if [[ "$database_path" != /* ]]; then
           database_path="$GITHUB_WORKSPACE/${database_path#./}"
         fi
