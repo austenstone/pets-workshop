@@ -25,21 +25,22 @@ Let's create the repository you'll use for your workshop.
 
 In a few moments a new repository will be created from the template for this workshop!
 
-## Open your codespace
+## Choose your workspace
 
-Now let's open a codespace so you have a development environment ready to go.
+Use whichever editor works best for you:
 
-1. Navigate to the main page of your newly created repository.
-2. Select **Code** > **Codespaces** > **Create codespace on main**.
+1. **Codespaces (easiest full environment):** On the repository page, select **Code** > **Codespaces** > **Create codespace on main**. This gives you a browser-based VS Code editor and terminal with the repository already cloned.
+2. **github.dev (terminal-free):** Press <kbd>.</kbd> on the repository page. Create files in the Explorer and commit or push them from the **Source Control** view.
+3. **Local editor:** Select **Code**, copy the repository URL, clone it locally, and open it in VS Code or your preferred editor.
 
-    In a few moments a codespace will open in your browser with a full VS Code editor. This is where you'll create and edit files throughout the workshop.
+Keep the repository's **Actions** tab open in a second browser tab regardless of which editor you choose.
 
 > [!TIP]
-> If your codespace ever disconnects or you close the tab, you can reopen it by navigating to your repository and selecting **Code** > **Codespaces** and the name of your codespace.
+> Terminal commands in this guide are optional conveniences. In VS Code, Codespaces, or github.dev, use **Source Control** to stage files, enter a commit message, commit, and select **Sync Changes** or **Push**. In GitHub's web file editor, select **Commit changes** after editing.
 
 ## Summary and next steps
 
-You've created the repository and opened a codespace — you're ready to start building! Next let's [create your first workflow][walkthrough-next].
+You've created the repository and opened your chosen workspace — you're ready to start building! Next let's [create your first workflow][walkthrough-next].
 
 | [← GitHub Actions: From CI to CD][walkthrough-previous] | [Next: Introduction & Your First Workflow →][walkthrough-next] |
 |:-----------------------------------|------------------------------------------:|

@@ -30,25 +30,31 @@ Security is important in every application. By detecting potential vulnerabiliti
 
 ## Configure Dependabot
 
-Most projects depend on open source and external libraries. While modern development would be impossible without them, we always need to ensure the dependencies we use are secure. [Dependabot][dependabot-quickstart] monitors your repository's dependencies and raises alerts — or even creates pull requests — to update insecure packages.
+Most projects depend on open source and external libraries. While modern development would be impossible without them, we always need to ensure the dependencies we use are secure. [Dependabot][dependabot-quickstart] can monitor the dependencies recorded in the dependency graph, raise alerts for known vulnerabilities, and create pull requests that update insecure packages.
 
-Public repositories on GitHub automatically have Dependabot alerts enabled. Let's configure Dependabot to also create PRs that update insecure library versions automatically.
+Availability and defaults can vary by repository, account, and organization policy. A public repository alone does not guarantee that the dependency graph, Dependabot alerts, or security updates are already enabled, so check each setting.
 
 1. Navigate to your repository on GitHub.
 2. Select **Settings** > **Advanced security** (under **Security** in the sidebar).
-3. Locate the **Dependabot** section.
+3. Locate **Dependency graph** and enable it if it is disabled.
+4. Locate the **Dependabot** section.
 
     ![Screenshot of the Dependabot section](../shared-images/dependabot-settings.png)
 
-4. Select **Enable** next to **Dependabot security updates** to configure Dependabot to create PRs to resolve alerts.
+5. Enable **Dependabot alerts** if they are disabled.
+6. Enable **Dependabot security updates** to allow Dependabot to create pull requests that resolve eligible alerts.
+7. Open **Security** > **Dependabot alerts** to check the results.
 
-You've now enabled Dependabot alerts and security updates! When an insecure library is detected, you'll receive an alert, and Dependabot will create a pull request to update to a secure version.
+The initial dependency analysis is asynchronous and can take several minutes. Even after an alert appears, a security update pull request may take longer or may not be available for every alert.
+
+> [!NOTE]
+> If the expected workshop finding does not appear within two minutes, do not wait on the scan. The facilitator will show the same finding and security-update flow from the prepared source repository, then you can continue to the next section.
 
 > [!TIP]
 > Dependabot doesn't just alert you — it can automatically create pull requests that bump library versions to secure ones. When you pair this with a CI pipeline that runs tests on every PR (which you'll build in the [next exercise][walkthrough-next]), those Dependabot PRs are automatically tested before merging. This creates a powerful feedback loop: vulnerabilities are detected, fixes are proposed, and your tests verify the update won't break anything — all without manual intervention.
 
 > [!IMPORTANT]
-> After enabling Dependabot security updates you may notice new pull requests created for potentially outdated packages. For this workshop you can ignore these pull requests.
+> The starter intentionally retains the dependency state used for the prepared finding. Do not merge dependency updates before this exercise. After enabling Dependabot, you may see alerts or pull requests appear later; you can ignore them for the rest of the workshop.
 
 ## Verify secret scanning
 
@@ -91,7 +97,7 @@ A background process starts and configures a CodeQL analysis workflow for your r
 
 You've reviewed and configured GitHub's security features for your repository:
 
-- **Dependabot** monitors dependencies for known vulnerabilities and creates PRs to update them.
+- **Dependabot** uses the dependency graph to identify known vulnerabilities and can create security update PRs when the relevant settings and an eligible fix are available.
 - **Secret scanning** and **push protection** are enabled by default for public repositories and help prevent supported credentials from reaching the repository.
 - **Code scanning** analyzes your source code using CodeQL, running as a GitHub Actions workflow on every push and PR.
 

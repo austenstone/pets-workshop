@@ -54,7 +54,7 @@ Right now we have two sets of tests - end to end tests with Playwright, and unit
               fi
     ```
 
-2. Commit and push the change:
+2. Use your editor's **Source Control** view to commit and push the workflow change, or use these optional terminal commands:
 
     ```bash
     git add .github/workflows/run-tests.yml
@@ -97,7 +97,11 @@ Let's create a ruleset that requires our tests to pass and changes to arrive thr
 
 Let's verify the ruleset is working.
 
-1. Return to your codespace and open the terminal (<kbd>Ctl</kbd>+<kbd>`</kbd> to toggle). Create a new branch and make a small change:
+1. Create a branch named `test-ruleset` using your editor's branch picker, edit `app/server/app.py`, and add `# test change` on a new line. Commit and publish the branch from **Source Control**.
+
+   You can also do the entire step on GitHub: use the branch selector to create `test-ruleset`, open `app/server/app.py`, select the pencil icon, add the comment, and select **Commit changes** on the new branch.
+
+   If you have a terminal, the equivalent commands are:
 
     ```bash
     git checkout -b test-ruleset

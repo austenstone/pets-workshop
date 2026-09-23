@@ -34,9 +34,8 @@ A workflow file is written in YAML and lives in the `.github/workflows/` directo
 
 Let's start with the classic "Hello World" — a workflow you can trigger manually from the GitHub UI.
 
-1. In your codespace, create the folder `.github/workflows/` if it doesn't already exist.
-2. Create a new file named `.github/workflows/hello.yml`.
-3. Add the following content:
+1. In your workspace, create a new file named `.github/workflows/hello.yml`. Your editor can create the parent folders when you enter the full path.
+2. Add the following content:
 
     ```yaml
     name: Hello World
@@ -59,7 +58,7 @@ Let's start with the classic "Hello World" — a workflow you can trigger manual
               echo "Triggered by: $GITHUB_ACTOR"
     ```
 
-4. Save the file.
+3. Save the file.
 
 > [!NOTE]
 > The `workflow_dispatch` event lets you trigger the workflow manually from the **Actions** tab. This is useful for testing workflows without needing to push code changes every time.
@@ -68,23 +67,17 @@ Let's start with the classic "Hello World" — a workflow you can trigger manual
 
 Now let's push the workflow and trigger it by hand.
 
-1. Open the terminal in your codespace by pressing <kbd>Ctl</kbd>+<kbd>`</kbd>.
-2. Stage and commit your changes:
+1. Use your editor's **Source Control** view to stage `hello.yml`, enter `Add hello world workflow`, commit, and push or sync. If you have a terminal, the equivalent commands are:
 
     ```bash
     git add .github/workflows/hello.yml
     git commit -m "Add hello world workflow"
-    ```
-
-3. Push to your repository:
-
-    ```bash
     git push
     ```
 
-4. Navigate to your repository on GitHub and select the **Actions** tab.
-5. In the left sidebar, select the **Hello World** workflow.
-6. Select the **Run workflow** button, keep the default branch, and select **Run workflow** again to confirm.
+2. Navigate to your repository on GitHub and select the **Actions** tab.
+3. In the left sidebar, select the **Hello World** workflow.
+4. Select the **Run workflow** button, keep the default branch, and select **Run workflow** again to confirm.
 
 ## Explore the logs
 

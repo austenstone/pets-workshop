@@ -40,7 +40,7 @@ To run the unit tests, you'll need to do the following in the workflow:
 
 Let's build that out!
 
-1. In your codespace, create a new file named `.github/workflows/run-tests.yml`.
+1. In your workspace, create a new file named `.github/workflows/run-tests.yml`.
 2. Add the following content:
 
     ```yaml
@@ -101,7 +101,7 @@ The **`permissions`** block controls what this token can do. For our CI workflow
 
 A bit later you'll use a more standard branching approach for changes. But for our purposes right now, let's push straight to `main`. What you'll notice is the workflow will automatically run, since the workflow will now exist on `main`!
 
-1. Open the terminal in your codespace by pressing <kbd>Ctl</kbd>+<kbd>`</kbd>, then stage, commit, and push:
+1. Use your editor's **Source Control** view to stage `run-tests.yml`, enter `Add CI workflow with unit tests`, commit, and push or sync. If you have a terminal, the equivalent commands are:
 
     ```bash
     git add .github/workflows/run-tests.yml
@@ -116,7 +116,7 @@ A bit later you'll use a more standard branching approach for changes. But for o
 
 The unit tests cover the API, but the shelter also has Playwright e2e tests that verify the full application works end-to-end in a real browser. Let's add a second job that runs alongside the unit tests.
 
-1. Return to your codespace and open `.github/workflows/run-tests.yml`. Add the following job to the bottom of the file:
+1. Return to your workspace and open `.github/workflows/run-tests.yml`. Add the following job to the bottom of the file:
 
     ```yaml
       test-e2e:
@@ -158,7 +158,7 @@ The unit tests cover the API, but the shelter also has Playwright e2e tests that
 > [!NOTE]
 > Because we haven't added a `needs` key, `test-api` and `test-e2e` will run **in parallel**. Each job gets its own runner, so they don't interfere with each other and the total CI time is closer to the duration of the slower job rather than the sum of both. The `test-e2e` job needs both Python and Node.js because the Playwright tests launch the full stack — the Flask API and the Astro frontend — before running browser tests against them.
 
-1. In the terminal, stage, commit, and push:
+1. Use your editor's **Source Control** view to commit and push the updated workflow, or use these optional terminal commands:
 
     ```bash
     git add .github/workflows/run-tests.yml

@@ -89,7 +89,7 @@ deploy:
 
 Let's extract the shared deploy steps into a reusable workflow. The workflow requires a `deploy-ref` input so every caller explicitly identifies the commit, tag, or branch to deploy.
 
-1. In your codespace, create a new file at `.github/workflows/reusable-deploy.yml`.
+1. In your workspace, create a new file at `.github/workflows/reusable-deploy.yml`.
 
 2. Define the `workflow_call` trigger with an input for the git ref to deploy:
 
@@ -139,7 +139,7 @@ Let's extract the shared deploy steps into a reusable workflow. The workflow req
     ```
 
 > [!NOTE]
-> Reusable workflows have a few important limitations: they can be nested up to 4 levels deep, and the workflow file must be located in the `.github/workflows` directory. You also cannot call a reusable workflow from within a reusable workflow's `steps` — they are called at the job level.
+> Reusable workflows have a few important limitations: a call chain can contain a maximum of 10 workflow levels total — the top-level caller plus up to nine reusable workflows — and each reusable workflow file must be located in the `.github/workflows` directory. Reusable workflows are called at the job level, not from a job's `steps`.
 
 ## Update the CD workflow
 
@@ -204,7 +204,7 @@ Now let's add the second caller — a manual deploy workflow for rollbacks and h
 
     This workflow is only triggered **manually** via `workflow_dispatch` — it appears as a "Run workflow" button in the Actions tab. It prompts for a **git ref** (a commit SHA, tag, or branch name to deploy), passes that ref to the reusable workflow's `deploy-ref` input, and uses the same deploy logic as the automated pipeline.
 
-3. In the terminal (<kbd>Ctl</kbd>+<kbd>`</kbd> to toggle), commit and push your changes:
+3. Use your editor's **Source Control** view to stage the three workflow files, enter `Extract reusable deploy workflow and add manual deploy`, commit, and push or sync. If you have a terminal, the equivalent commands are:
 
     ```bash
     git add .github/workflows/reusable-deploy.yml .github/workflows/azure-dev.yml .github/workflows/manual-deploy.yml

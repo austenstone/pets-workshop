@@ -29,15 +29,14 @@ Inputs and outputs let the action communicate with the calling workflow, making 
 
 Let's create a composite action that sets up Python, installs dependencies, and seeds the test database.
 
-1. In your codespace, open a terminal window by selecting <kbd>Ctl</kbd>+<kbd>\`</kbd>.
-2. Create the directory for the action by executing the following command in the terminal:
+1. In your workspace's Explorer, create `.github/actions/setup-python-env/action.yml` directly. VS Code, Codespaces, github.dev, and GitHub's web file editor accept the nested path and create its parent folders.
+2. If you prefer a terminal, you can create the directory first:
 
     ```bash
     mkdir -p .github/actions/setup-python-env
     ```
 
-3. In the newly created `setup-python-env` folder, create a new file named `action.yml` to store your composite action.
-4. Add the following YAML to the file to define your composite action:
+3. Add the following YAML to `action.yml` to define your composite action:
 
     ```yaml
     name: 'Setup Python Environment'
@@ -217,7 +216,7 @@ Now let's update the CI workflow to use the custom action instead of the individ
               DATABASE_PATH: ${{ steps.seed.outputs.database-file }}
     ```
 
-5. In the terminal (<kbd>Ctl</kbd>+<kbd>`</kbd> to toggle), commit and push your changes:
+5. Use your editor's **Source Control** view to stage both files, enter `Add setup-python-env composite action`, commit, and push or sync. If you have a terminal, the equivalent commands are:
 
     ```bash
     git add .github/actions/setup-python-env/action.yml .github/workflows/run-tests.yml

@@ -9,19 +9,19 @@ In this exercise you'll also learn about **caching** — a technique to speed up
 
 ## Scenario
 
-The CI workflow from the previous exercise works, but both jobs reinstall every dependency from scratch on every run. That means downloading Python packages, Node modules, and Playwright browsers each time — even when they haven't changed. You want to ensure workflows run as quickly as possible, to move from idea to deployed as quickly as possible.
+The CI workflow from the previous exercise works, but both jobs reinstall every dependency from scratch on every run. That means repeatedly downloading Python packages, npm package data, and Playwright browsers even when they haven't changed. You want to ensure workflows run as quickly as possible, to move from idea to deployed as quickly as possible.
 
 ## Background
 
-[Caching][caching-docs] stores downloaded dependencies between workflow runs so they don't need to be fetched from the internet every time. Each cache is identified by a key — typically derived from the package manager and lock file. When a workflow runs, it checks for an existing cache matching that key. On a hit, the cached files are restored and the install step completes in seconds. On a miss, the dependencies are downloaded normally and then saved for next time.
+[Caching][caching-docs] stores package-manager download data between workflow runs so it does not need to be fetched from the internet every time. Each cache is identified by a key — typically derived from the package manager and lock file. When a workflow runs, it checks for an existing cache matching that key. On a hit, the cached data is restored before the install step. On a miss, packages are downloaded normally and the cache is saved for next time.
 
 Many popular setup actions — like `actions/setup-python` and `actions/setup-node` — have caching built right in, so you can enable it with a single line. GitHub provides 10 GB of cache storage per repository, with least-recently-used entries evicted when the limit is reached.
 
 ## Add caching to the unit test job
 
-Many popular setup actions have caching built right in. Let's start with the `test-api` job, which uses Python. Libraries are installed for Python using `pip`, which will become the key name. This instructs the workflow to cache any libraries installed using `pip`.
+Many popular setup actions have caching built right in. Let's start with the `test-api` job, which uses Python. Libraries are installed with `pip`, so the workflow can reuse pip's downloaded package data between runs.
 
-1. In your codespace, open `.github/workflows/run-tests.yml`.
+1. In your workspace, open `.github/workflows/run-tests.yml`.
 2. Update the **Set up Python** step in the `test-api` job to enable pip caching:
 
     ```yaml
@@ -33,13 +33,13 @@ Many popular setup actions have caching built right in. Let's start with the `te
     ```
 
 > [!NOTE]
-> The `cache: 'pip'` option tells `setup-python` to cache downloaded pip packages. On the first run it saves the cache; on subsequent runs it restores it, skipping most download time.
+> The `cache: 'pip'` option tells `setup-python` to cache pip's downloaded package data. On the first run it saves the cache; on subsequent runs it restores it, skipping most download time.
 
 3. Save the file.
 
 ## Add caching to the e2e test job
 
-The e2e job has two dependencies to cache — Python packages and the Node modules. We can follow the same path here! To make sure our packages are updated when versions change, we're going to set the `package-lock.json` file as a dependency. When the workflow runs, it will look to see if that file has changed; if it has it'll perform a reinstall. If not, it'll use the cache!
+The e2e job uses both pip and npm, so we can cache download data for each package manager. To make sure the npm cache is refreshed when package versions change, use `package-lock.json` as the cache dependency path.
 
 1. Update the **Set up Python** step in the `test-e2e` job the same way:
 
@@ -62,6 +62,8 @@ The e2e job has two dependencies to cache — Python packages and the Node modul
               cache-dependency-path: 'app/client/package-lock.json'
     ```
 
+    `setup-node` caches npm's global package data, not the project's `node_modules` directory. `npm ci` still recreates `node_modules` on every run, but it can reuse packages from the restored npm cache instead of downloading them again.
+
 3. Save the file.
 
 > [!NOTE]
@@ -71,7 +73,7 @@ The e2e job has two dependencies to cache — Python packages and the Node modul
 
 Now let's push the changes and see the impact of caching.
 
-1. In the terminal (<kbd>Ctl</kbd>+<kbd>`</kbd> to toggle), stage, commit, and push your changes:
+1. Use your editor's **Source Control** view to commit and push the updated workflow, or use these optional terminal commands:
 
     ```bash
     git add .github/workflows/run-tests.yml
@@ -92,7 +94,7 @@ Now let's push the changes and see the impact of caching.
 
 ## Summary and next steps
 
-The Actions Marketplace provides thousands of pre-built actions so you don't have to reinvent the wheel. Many setup actions like `setup-python` and `setup-node` have caching built in, making it easy to dramatically reduce workflow run times by reusing previously downloaded dependencies.
+The Actions Marketplace provides thousands of pre-built actions so you don't have to reinvent the wheel. Many setup actions like `setup-python` and `setup-node` have caching built in, making it easy to reduce workflow run times by reusing package-manager download data.
 
 Next, we'll explore [matrix strategies][walkthrough-next] to test across multiple configurations simultaneously.
 

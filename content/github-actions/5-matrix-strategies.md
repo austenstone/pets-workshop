@@ -17,7 +17,7 @@ A [matrix][matrix-docs] allows you to create an array for a workflow to iterate 
 
 Let's update the CI workflow to test the API across multiple Python versions.
 
-1. Open `.github/workflows/run-tests.yml` in your codespace.
+1. Open `.github/workflows/run-tests.yml` in your workspace.
 2. Locate the `test-api` job.
 3. Add a `strategy` block with a `matrix` definition, and update the `python-version` input to reference the matrix value.
 4. Replace the existing `test-api` job with the following:
@@ -52,7 +52,7 @@ Let's update the CI workflow to test the API across multiple Python versions.
 > [!IMPORTANT]
 > Make sure to quote version numbers like `'3.12'` in the matrix array. Without quotes, YAML may interpret them as floating-point numbers — for example, `3.10` becomes `3.1`, which would cause the setup step to fail.
 
-5. In the terminal (<kbd>Ctl</kbd>+<kbd>`</kbd> to toggle), stage, commit, and push your changes:
+5. Use your editor's **Source Control** view to commit and push the updated workflow, or use these optional terminal commands:
 
     ```bash
     git add .github/workflows/run-tests.yml
@@ -60,7 +60,7 @@ Let's update the CI workflow to test the API across multiple Python versions.
     git push
     ```
 
-6. Navigate to the **Actions** tab on GitHub. You should see three parallel jobs running — one for each Python version.
+6. Navigate to the **Actions** tab on GitHub. You should see four jobs total: three parallel `test-api` matrix jobs — one for each Python version — plus the existing `test-e2e` job.
 
 ## Understanding matrix behavior
 

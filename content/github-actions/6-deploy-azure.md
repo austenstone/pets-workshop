@@ -33,7 +33,7 @@ There are several strategies for ensuring only validated code reaches production
 
 The facilitator sets up the Azure Developer CLI and scaffolds the infrastructure while attendees follow along.
 
-1. In the facilitator's prepared demo codespace, open the terminal (or press <kbd>Ctl</kbd>+<kbd>`</kbd> to toggle it).
+1. In the facilitator's prepared demo workspace, open a terminal. These Azure commands are presenter-only and are not part of the attendee editor path.
 2. Install azd by running:
 
     ```bash
@@ -82,7 +82,7 @@ The generated `infra/` directory contains several Bicep files that work together
 
 The generated Bicep files define the Azure Container Apps that will host the client and server. We need to add an environment variable so the client knows where to find the API server.
 
-1. Open `infra/resources.bicep` in your codespace.
+1. Open `infra/resources.bicep` in the facilitator's prepared demo workspace.
 2. Find the section (around line 109) that reads:
 
     ```bicep
@@ -210,8 +210,8 @@ When you said **yes** to `azd pipeline config`'s commit prompt, it pushed your c
 1. Navigate to the **Actions** tab. The push will trigger the **Run Tests** workflow first.
 2. Once tests complete successfully, the **Deploy App** workflow will start automatically (via the `workflow_run` trigger).
 3. Watch the deploy job run — it will provision Azure resources and deploy both the client and server applications.
-4. Once the deployment completes return to your codespace.
-5. Run the following in the terminal to list the details of your new Azure environment:
+4. Once the deployment completes, return to the facilitator's prepared demo workspace.
+5. In the presenter terminal, list the details of the new Azure environment:
 
     ```bash
     azd show
