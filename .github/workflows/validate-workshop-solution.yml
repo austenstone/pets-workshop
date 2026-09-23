@@ -1,0 +1,116 @@
+name: Validate Workshop Solution
+
+on:
+  push:
+    branches: [workshop-completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-workflows:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install workflow validators
+        run: |
+          go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.7
+          pipx install zizmor==1.30.1
+
+      - name: Validate workflow syntax
+        run: |
+          "$(go env GOPATH)/bin/actionlint" .github/workflows/*.yml
+
+      - name: Audit workflow security
+        run: zizmor --min-severity high --no-exit-codes --format=github .github/workflows .github/actions
+
+      - name: Verify workshop workflow contracts
+        run: |
+          grep -F 'workflows: ["Run Tests"]' .github/workflows/azure-dev.yml
+          grep -F 'github.event.workflow_run.head_sha' .github/workflows/azure-dev.yml
+          grep -F 'uses: ./.github/workflows/reusable-deploy.yml' .github/workflows/azure-dev.yml
+          grep -F 'uses: ./.github/workflows/reusable-deploy.yml' .github/workflows/manual-deploy.yml
+          grep -F 'needs: [test-api, test-e2e]' .github/workflows/run-tests.yml
+          grep -F 'id-token: write' .github/workflows/azure-dev.yml
+          grep -F 'id-token: write' .github/workflows/manual-deploy.yml
+          grep -F 'uses: Azure/login@v3' .github/workflows/reusable-deploy.yml
+          grep -F 'uses: Azure/setup-azd@v2' .github/workflows/reusable-deploy.yml
+          grep -F "cache: 'pip'" .github/actions/setup-python-env/action.yml
+          grep -F 'INPUT_DATABASE_PATH:' .github/actions/setup-python-env/action.yml
+
+  test-api:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.12', '3.13', '3.14']
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Python environment
+        id: seed
+        uses: ./.github/actions/setup-python-env
+        with:
+          python-version: ${{ matrix.python-version }}
+          database-path: app/server/test_dogshelter.db
+
+      - name: Run tests
+        working-directory: app/server
+        env:
+          DATABASE_PATH: ${{ steps.seed.outputs.database-file }}
+        run: python -m unittest test_app -v
+
+  test-e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup Python environment
+        id: seed
+        uses: ./.github/actions/setup-python-env
+        with:
+          database-path: app/server/test_dogshelter.db
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: app/client/package-lock.json
+
+      - name: Install Node dependencies
+        working-directory: app/client
+        run: npm ci
+
+      - name: Install Playwright browsers
+        working-directory: app/client
+        run: npx playwright install --with-deps chromium
+
+      - name: Run e2e tests
+        working-directory: app/client
+        env:
+          DATABASE_PATH: ${{ steps.seed.outputs.database-file }}
+        run: npx playwright test
+
+  tests-passed:
+    if: always()
+    needs: [test-api, test-e2e]
+    runs-on: ubuntu-slim
+    steps:
+      - name: Check results
+        run: |
+          if [[ "${{ needs.test-api.result }}" != "success" || "${{ needs.test-e2e.result }}" != "success" ]]; then
+            echo "One or more jobs failed"
+            exit 1
+          fi

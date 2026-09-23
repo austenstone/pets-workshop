@@ -1,0 +1,20 @@
+name: Manual Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy-ref:
+        description: 'Git ref to deploy (commit SHA, tag, or branch)'
+        required: true
+        default: 'main'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/reusable-deploy.yml
+    with:
+      deploy-ref: ${{ inputs.deploy-ref }}
+    secrets: inherit
