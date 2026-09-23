@@ -4,6 +4,7 @@ import DogList from '../components/DogList.astro';
 
 const API_SERVER_URL = process.env.API_SERVER_URL || 'http://localhost:5100';
 const PAGE_SIZE = 6;
+const baseUrl = import.meta.env.BASE_URL;
 
 let dogs = [];
 let page = 1;
@@ -46,7 +47,7 @@ try {
           <nav class="flex justify-center items-center gap-2 mt-10" data-testid="pagination">
             {page > 1 ? (
               <a
-                href={`/?page=${page - 1}`}
+                href={`${baseUrl}?page=${page - 1}`}
                 class="px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 hover:border-blue-500/50 hover:text-blue-400 transition-colors"
                 data-testid="pagination-prev"
               >
@@ -64,7 +65,7 @@ try {
 
             {page < totalPages ? (
               <a
-                href={`/?page=${page + 1}`}
+                href={`${baseUrl}?page=${page + 1}`}
                 class="px-4 py-2 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 hover:border-blue-500/50 hover:text-blue-400 transition-colors"
                 data-testid="pagination-next"
               >

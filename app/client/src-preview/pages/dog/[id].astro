@@ -1,0 +1,29 @@
+---
+import type { GetStaticPaths } from 'astro';
+import DogDetails from '../../../src/components/DogDetails.astro';
+import Layout from '../../../src/layouts/Layout.astro';
+import PreviewNotice from '../../components/PreviewNotice.astro';
+import { dogs } from '../../data/loadDogs';
+
+export const getStaticPaths = (() =>
+  dogs.map((dog) => ({
+    params: { id: String(dog.id) },
+    props: { dog },
+  }))) satisfies GetStaticPaths;
+
+const { dog } = Astro.props;
+const baseUrl = import.meta.env.BASE_URL;
+---
+
+<Layout title={`${dog.name} - Tailspin Shelter Preview`}>
+  <div class="py-8">
+    <PreviewNotice />
+    <DogDetails dog={dog} />
+
+    <div class="mt-8">
+      <a href={baseUrl} data-testid="back-link" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-300 inline-flex items-center">
+        Back to All Dogs
+      </a>
+    </div>
+  </div>
+</Layout>

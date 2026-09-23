@@ -1,0 +1,23 @@
+---
+import DogList from '../../src/components/DogList.astro';
+import Layout from '../../src/layouts/Layout.astro';
+import PreviewNotice from '../components/PreviewNotice.astro';
+import { dogs } from '../data/loadDogs';
+
+const availableDogs = dogs.filter(({ status }) => status === 'AVAILABLE').slice(0, 12);
+---
+
+<Layout title="Tailspin Shelter Preview - Find Your Forever Friend">
+  <div class="py-8">
+    <PreviewNotice />
+
+    <div class="max-w-3xl mb-10">
+      <h1 class="text-4xl font-bold mb-4 text-slate-100">Welcome to Tailspin Shelter</h1>
+      <p class="text-xl text-slate-300">
+        Explore a static preview of the dogs available in the repository snapshot.
+      </p>
+    </div>
+
+    <DogList dogs={availableDogs} />
+  </div>
+</Layout>

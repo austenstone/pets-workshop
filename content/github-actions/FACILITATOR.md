@@ -36,6 +36,21 @@ Attendees need a GitHub account and basic Git familiarity. They do not need an A
 | 01:44-01:54 | 10 | Extract the reusable deployment workflow |
 | 01:54-02:00 | 6 | Configure the solo-safe ruleset, recap, and next steps |
 
+## Optional bonus rounds after the core
+
+Do not insert modules 10–13 into the 120-minute agenda. They are independent post-core extensions for extra time, a follow-up session, or a smaller advanced audience.
+
+| Module | Recommended time | Best delivery | Required preflight |
+|---|---:|---|---|
+| 10: Artifact attestations | 10 minutes | Hands-on | Public repository, current GitHub CLI, and one prepared successful attestation run |
+| 11: Environment gates | 10 minutes | Facilitator or paired | Configured `staging` and `production` environments plus an eligible reviewer or timer |
+| 12: Concurrency | 10 minutes | Hands-on | Workflow on the default branch and prepared canceled/pending evidence |
+| 13: Pages preview | About 10 minutes | Hands-on | Real deployment validated in a disposable public template-created repository |
+
+Every bonus is skippable. If setup or platform timing threatens the room, use its prepared evidence and stop without changing the core route.
+
+Module 13 consumes the target repository's single GitHub Pages site. The source repository must continue publishing this guide from `main:/docs`; never switch `austenstone/pets-workshop` to a workflow-based Pages source. Use an attendee repository or a clearly disposable public validation repository, then disable Pages and delete the validation repository after preflight.
+
 ## Staffing for 80 attendees
 
 Use **12 staff**:

@@ -1,15 +1,12 @@
 ---
-interface Dog {
-  id: number;
-  name: string;
-  breed: string;
-}
+import type { DogSummary } from '../types/dog';
 
 interface Props {
-  dogs: Dog[];
+  dogs: DogSummary[];
 }
 
 const { dogs } = Astro.props;
+const baseUrl = import.meta.env.BASE_URL;
 ---
 
 <div>
@@ -23,7 +20,7 @@ const { dogs } = Astro.props;
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" data-testid="dog-list">
       {dogs.map((dog) => (
         <a
-          href={`/dog/${dog.id}`}
+          href={`${baseUrl}dog/${dog.id}`}
           class="group block bg-slate-800/60 backdrop-blur-sm rounded-xl overflow-hidden shadow-lg border border-slate-700/50 hover:border-blue-500/50 hover:shadow-blue-500/10 hover:shadow-xl transition-all duration-300 hover:translate-y-[-6px]"
           data-testid="dog-card"
         >

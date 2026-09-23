@@ -6,7 +6,7 @@ The available workshops are:
 
 - **[One hour](./content/1-hour/README.md)** — focused on GitHub Copilot
 - **[Full-day](./content/full-day/README.md)** — a full day-in-the-life of a developer using GitHub for their DevOps processes
-- **[GitHub Actions](./content/github-actions/README.md)** — CI/CD pipelines from running tests to deploying to Azure
+- **[GitHub Actions](./content/github-actions/README.md)** — CI/CD pipelines from running tests to deploying to Azure, followed by independently skippable advanced bonus rounds
 
 ## Getting started
 

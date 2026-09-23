@@ -404,6 +404,24 @@ h1 {
   box-shadow: inset 0.35rem 0 var(--violet-400);
 }
 
+.bonus-rounds-intro {
+  padding: clamp(4rem, 8vw, 7rem) max(1rem, calc((100vw - var(--content-width)) / 2));
+  background: linear-gradient(135deg, var(--slate-850), var(--slate-950));
+  border-block: 1px solid var(--slate-700);
+}
+
+.bonus-rounds-intro > * {
+  max-width: 65ch;
+}
+
+.bonus-module {
+  box-shadow: inset 0.35rem 0 var(--amber-300);
+}
+
+.bonus-module .module-number {
+  color: var(--amber-300);
+}
+
 .module-meta {
   display: flex;
   flex-direction: column;

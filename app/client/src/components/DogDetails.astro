@@ -1,13 +1,5 @@
 ---
-interface Dog {
-  id: number;
-  name: string;
-  breed: string;
-  age: number;
-  description: string;
-  gender: string;
-  status: 'AVAILABLE' | 'PENDING' | 'ADOPTED';
-}
+import type { Dog } from '../types/dog';
 
 interface Props {
   dog: Dog;

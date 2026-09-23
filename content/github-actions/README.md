@@ -36,6 +36,17 @@ Facilitators should use the [facilitator guide][facilitator] for timing, staffin
 8. [Reusable workflows][reusable-workflows] — Share workflow logic across repositories
 9. [Required workflows, protection & wrap-up][protection] — Enforce standards and protect your branches
 
+## Optional bonus rounds
+
+Modules 10–13 are independent extensions after the core route. They are **not part of the 120-minute workshop schedule**. Pick any one when time, repository access, and audience interest allow; skipping one never blocks another.
+
+10. [Artifact attestations and provenance][attestations] — 5, 10, or 15 minutes; build and verify signed provenance
+11. [Environments and deployment gates][deployment-gates] — 5, 10, or 15 minutes; pause a simulated promotion for a timer or reviewer
+12. [Concurrency cancellation and retained queues][concurrency] — 5, 10, or 15 minutes; compare canceling stale work with serial production queues
+13. [GitHub Pages static preview][pages-preview] — about 10 minutes; deploy a pre-baked SQLite-to-JSON Astro snapshot from an attendee repository
+
+Each bonus documents prerequisites, settings outside the workflow, a facilitator fallback, reset steps, failure modes, and current validation status. Module 13 uses the attendee repository's one free Pages site. Do not run it in `austenstone/pets-workshop`, whose Pages source must remain `main:/docs`.
+
 ## Resources
 
 - [GitHub Actions documentation][github-actions-docs]
@@ -47,13 +58,16 @@ Facilitators should use the [facilitator guide][facilitator] for timing, staffin
 |:-----------------------------------|------------------------------------------:|
 
 [actions-marketplace]: https://github.com/marketplace?type=actions
+[attestations]: ./10-artifact-attestations.md
 [astro]: https://astro.build/
 [azure-free]: https://azure.microsoft.com/free/
 [azd-docs]: https://learn.microsoft.com/azure/developer/azure-developer-cli/overview
 [ci]: ./3-running-tests.md
 [code-scanning]: ./2-code-scanning.md
 [custom-actions]: ./7-custom-actions.md
+[concurrency]: ./12-concurrency-and-cancellation.md
 [deployment]: ./6-deploy-azure.md
+[deployment-gates]: ./11-environments-and-deployment-gates.md
 [facilitator]: ./FACILITATOR.md
 [flask]: https://flask.palletsprojects.com/
 [github-actions]: https://github.com/features/actions
@@ -63,6 +77,7 @@ Facilitators should use the [facilitator guide][facilitator] for timing, staffin
 [introduction]: ./1-introduction.md
 [marketplace]: ./4-caching.md
 [matrix]: ./5-matrix-strategies.md
+[pages-preview]: ./13-github-pages-preview.md
 [protection]: ./9-required-workflows.md
 [reusable-workflows]: ./8-reusable-workflows.md
 [setup]: ./0-setup.md

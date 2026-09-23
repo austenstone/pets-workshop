@@ -2,6 +2,8 @@
 
 # build output
 dist/
+app/client/dist-pages/
+app/client/src-preview/data/dogs.json
 
 # generated types
 .astro/
