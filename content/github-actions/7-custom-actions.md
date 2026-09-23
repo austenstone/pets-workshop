@@ -65,6 +65,7 @@ Let's create a composite action that sets up Python, installs dependencies, and 
           uses: actions/setup-python@v5
           with:
             python-version: ${{ inputs.python-version }}
+            cache: 'pip'
 
         - name: Install dependencies
           run: pip install -r app/server/requirements.txt
@@ -72,8 +73,10 @@ Let's create a composite action that sets up Python, installs dependencies, and 
 
         - name: Resolve database path
           id: database
+          env:
+            INPUT_DATABASE_PATH: ${{ inputs.database-path }}
           run: |
-            database_path="${{ inputs.database-path }}"
+            database_path="$INPUT_DATABASE_PATH"
             if [[ "$database_path" != /* ]]; then
               database_path="$GITHUB_WORKSPACE/${database_path#./}"
             fi
@@ -92,6 +95,7 @@ Let's create a composite action that sets up Python, installs dependencies, and 
 
 Review the key parts of the action:
 - **Inputs** provide sensible defaults so callers only need to override what's different.
+- **The Python setup step** keeps the pip cache enabled from the previous exercise.
 - **The path-resolution step** converts a repository-relative input to an absolute path. This matters because the seed command runs from the repository root while the Python tests run from `app/server`.
 - **Outputs** expose that absolute path to the calling workflow so every process opens the same SQLite file.
 - Each `run` step explicitly declares `shell: bash` as required by composite actions.
