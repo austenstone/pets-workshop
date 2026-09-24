@@ -24,5 +24,5 @@
     4321,
     5100
   ],
-  "postStartCommand": "chmod +x /workspaces/pets-workshop/app/scripts/start-app.sh && /workspaces/pets-workshop/app/scripts/start-app.sh"
+  "postStartCommand": "chmod +x \"${containerWorkspaceFolder}/app/scripts/start-app.sh\" && \"${containerWorkspaceFolder}/app/scripts/start-app.sh\""
 }

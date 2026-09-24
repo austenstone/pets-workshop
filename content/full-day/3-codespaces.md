@@ -94,7 +94,7 @@ Before rebuilding the container, let's add **GitHub.copilot** to the list of ext
 6. Just below the list of ports, add the command to run the startup script to the container definition:
 
     ```json
-    "postStartCommand": "chmod +x /workspaces/pets-workshop/app/scripts/start-app.sh && /workspaces/pets-workshop/app/scripts/start-app.sh",
+    "postStartCommand": "chmod +x \"${containerWorkspaceFolder}/app/scripts/start-app.sh\" && \"${containerWorkspaceFolder}/app/scripts/start-app.sh\"",
     ```
 
 You've now defined a custom container!
