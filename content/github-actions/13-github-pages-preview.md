@@ -35,7 +35,80 @@ GitHub Pages supports public repositories on GitHub Free and paid plans. The pub
 
 ## Prepared workflow
 
-Copy [`snippets/13-pages-preview.yml`](./snippets/13-pages-preview.yml) to `.github/workflows/pages-preview.yml`.
+Create `.github/workflows/pages-preview.yml` with:
+
+```yaml
+name: Bonus - Tailspin Pages Preview
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: pages-preview
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.14'
+
+      - name: Configure GitHub Pages
+        id: pages
+        uses: actions/configure-pages@v6
+
+      - name: Export SQLite snapshot
+        working-directory: app/client
+        run: python3 scripts/export-pages-data.py
+
+      - name: Install dependencies
+        working-directory: app/client
+        run: npm ci
+
+      - name: Build static preview
+        working-directory: app/client
+        env:
+          PAGES_SITE: ${{ steps.pages.outputs.origin }}
+          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+        run: npm run build:pages
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: app/client/dist-pages
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-slim
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy static preview
+        id: deployment
+        uses: actions/deploy-pages@v5
+```
 
 The build job has only:
 

@@ -26,7 +26,74 @@ Concurrency groups are repository-scoped and case-insensitive. Include `${{ gith
 
 ## Prepared workflow
 
-Copy [`snippets/12-concurrency-lab.yml`](./snippets/12-concurrency-lab.yml) to `.github/workflows/concurrency-lab.yml`.
+Create `.github/workflows/concurrency-lab.yml` with:
+
+```yaml
+name: Bonus - Concurrency Lab
+run-name: Concurrency lab - ${{ inputs.behavior }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      behavior:
+        description: Concurrency behavior to demonstrate
+        required: true
+        type: choice
+        options:
+          - Cancel stale preview
+          - Queue production deployments
+      hold-seconds:
+        description: Keep the job running long enough to trigger another run
+        required: true
+        default: '60'
+        type: choice
+        options:
+          - '20'
+          - '60'
+
+permissions: {}
+
+jobs:
+  cancel-stale-preview:
+    if: inputs.behavior == 'Cancel stale preview'
+    runs-on: ubuntu-slim
+    concurrency:
+      group: ${{ github.workflow }}-preview
+      cancel-in-progress: true
+    steps:
+      - name: Hold preview slot
+        env:
+          HOLD_SECONDS: ${{ inputs.hold-seconds }}
+        run: |
+          {
+            echo '## Cancel stale preview'
+            echo
+            echo "- Run: \`${GITHUB_RUN_ID}\`"
+            echo "- Group: \`${GITHUB_WORKFLOW}-preview\`"
+            echo '- Policy: cancel the running job when a newer run arrives'
+          } >> "$GITHUB_STEP_SUMMARY"
+          sleep "$HOLD_SECONDS"
+
+  queue-production-deployment:
+    if: inputs.behavior == 'Queue production deployments'
+    runs-on: ubuntu-slim
+    concurrency:
+      group: ${{ github.workflow }}-production
+      queue: max
+    steps:
+      - name: Hold production slot
+        env:
+          HOLD_SECONDS: ${{ inputs.hold-seconds }}
+        run: |
+          {
+            echo '## Queue production deployments'
+            echo
+            echo "- Run: \`${GITHUB_RUN_ID}\`"
+            echo "- Group: \`${GITHUB_WORKFLOW}-production\`"
+            echo '- Policy: retain pending runs and deploy one at a time'
+          } >> "$GITHUB_STEP_SUMMARY"
+          sleep "$HOLD_SECONDS"
+```
 
 Cancel stale work:
 

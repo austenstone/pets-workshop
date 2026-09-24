@@ -23,7 +23,50 @@ Environments are available for public repositories on all current GitHub plans. 
 
 ## Prepared workflow
 
-Copy [`snippets/11-gated-tailspin-deployment.yml`](./snippets/11-gated-tailspin-deployment.yml) to `.github/workflows/gated-tailspin-deployment.yml`.
+Create `.github/workflows/gated-tailspin-deployment.yml` with:
+
+```yaml
+name: Bonus - Gated Tailspin Deployment
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  deploy-staging:
+    name: Deploy to staging
+    runs-on: ubuntu-slim
+    environment:
+      name: staging
+    steps:
+      - name: Record staging deployment
+        run: |
+          {
+            echo '## Staging deployment'
+            echo
+            echo "- Commit: \`${GITHUB_SHA}\`"
+            echo "- Actor: \`${GITHUB_ACTOR}\`"
+            echo '- Result: simulated deployment completed'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  deploy-production:
+    name: Deploy to production
+    needs: deploy-staging
+    runs-on: ubuntu-slim
+    environment:
+      name: production
+    steps:
+      - name: Record production deployment
+        run: |
+          {
+            echo '## Production deployment'
+            echo
+            echo "- Commit: \`${GITHUB_SHA}\`"
+            echo "- Actor: \`${GITHUB_ACTOR}\`"
+            echo '- Result: protected promotion completed'
+          } >> "$GITHUB_STEP_SUMMARY"
+```
 
 The workflow creates deployment records for two environments:
 
