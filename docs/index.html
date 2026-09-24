@@ -309,6 +309,21 @@ FORM: The fourth grounded structure, a sticky timeline rail with full-width modu
         </div>
       </section>
 
+      <section class="bonus-rounds-intro" id="authoring-tips" aria-labelledby="authoring-tips-title">
+        <p class="event-line">Optional reference · Outside the 120-minute route</p>
+        <h2 id="authoring-tips-title">Authoring tips for your next workflow</h2>
+        <p>The official <a href="https://github.com/github/vscode-github-actions" target="_blank" rel="noreferrer">GitHub Actions extension for VS Code</a> adds workflow-aware authoring, validation, completion, documentation, and run management. It is included in this repository's tracked dev-container configuration, so Codespaces installs it automatically. An AI assistant connected to the <a href="https://github.com/github/github-mcp-server" target="_blank" rel="noreferrer">GitHub MCP Server</a> with Actions enabled can inspect authenticated workflow and run context. The authenticated <a href="https://cli.github.com/manual/" target="_blank" rel="noreferrer"><code>gh</code> CLI</a> is an equally capable alternative for workflow and run inspection or control.</p>
+        <p>Validate locally with complementary tools: <a href="https://github.com/rhysd/actionlint" target="_blank" rel="noreferrer"><code>actionlint</code></a> for workflow correctness, <a href="https://docs.zizmor.sh/" target="_blank" rel="noreferrer"><code>zizmor</code></a> for Actions security, and <a href="https://www.shellcheck.net/" target="_blank" rel="noreferrer">ShellCheck</a> for shell embedded in <code>run:</code> steps. GitHub remains the final authority for hosted-runner behavior, repository settings, permissions, and newly released syntax.</p>
+        <h3>Prompt recipes</h3>
+        <ol class="steps">
+          <li><strong>Find the causative failure:</strong> “Inspect the latest failed workflow run. Identify the first failure that caused the run to fail, and exclude downstream cancellations, skipped jobs, and duplicate symptoms.”</li>
+          <li><strong>Explain a skipped job:</strong> “Explain why this job was skipped. Evaluate its <code>needs</code> chain, triggering event and payload, and <code>if</code> expressions in order. Cite the exact condition that resolved false.”</li>
+          <li><strong>Trace reusable workflow boundaries:</strong> “Trace every reusable workflow call. Report the permission, secret, environment, concurrency, output, and ref boundaries at each caller-to-callee transition.”</li>
+          <li><strong>Separate queueing from execution:</strong> “Break the run timeline into run-creation delay, runner queue time, and job execution time. Recommend runner changes only if queue time is the actual bottleneck.”</li>
+          <li><strong>Review without editing:</strong> “Review these workflows with <code>actionlint</code> and <code>zizmor</code>. Rank only findings that are exploitable or behavior-breaking, explain the evidence, and do not edit any files.”</li>
+        </ol>
+      </section>
+
       <section class="bonus-rounds-intro" aria-labelledby="bonus-rounds-title">
         <p class="event-line">Optional · After the 120-minute core · Pick any one</p>
         <h2 id="bonus-rounds-title">Advanced bonus rounds</h2>

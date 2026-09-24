@@ -27,7 +27,7 @@ Let's create our own dev container! The [dev container is configured][dev-contai
 2. Select **Codespaces: Add Development Container Configuration Files...** .
 3. Select **Create a new configuration...**.
 4. Scroll down and select **Node.js & TypeScript**.
-5. Select **22-bookworm (default)**.
+5. Select **24-bookworm**.
 6. Select the following features to add into your container:
     - **Azure CLI**
     - **GitHub CLI**
@@ -56,6 +56,7 @@ Before rebuilding the container, let's add **GitHub.copilot** to the list of ext
 
     ```json
     "features": {
+		"ghcr.io/devcontainers/features/azure-cli:1": {},
 		"ghcr.io/devcontainers/features/github-cli:1": {},
 		"ghcr.io/devcontainers/features/python:1": {}
 	}
@@ -70,6 +71,7 @@ Before rebuilding the container, let's add **GitHub.copilot** to the list of ext
 			"extensions": [
 				"GitHub.copilot",
 				"GitHub.copilot-chat",
+				"github.vscode-github-actions",
                 "ms-azuretools.vscode-azure-github-copilot",
 				"alexcvzz.vscode-sqlite",
 				"astro-build.astro-vscode",

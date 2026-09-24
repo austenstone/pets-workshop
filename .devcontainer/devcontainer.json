@@ -1,0 +1,28 @@
+{
+  "name": "Pets Workshop",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:5-24-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/azure-cli:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/python:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "github.vscode-github-actions",
+        "ms-azuretools.vscode-azure-github-copilot",
+        "alexcvzz.vscode-sqlite",
+        "astro-build.astro-vscode",
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+      ]
+    }
+  },
+  "forwardPorts": [
+    4321,
+    5100
+  ],
+  "postStartCommand": "chmod +x /workspaces/pets-workshop/app/scripts/start-app.sh && /workspaces/pets-workshop/app/scripts/start-app.sh"
+}
