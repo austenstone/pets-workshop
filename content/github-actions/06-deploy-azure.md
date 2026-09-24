@@ -142,7 +142,7 @@ Let's create a workflow that:
     ```yaml
     name: Deploy App
 
-    on: # zizmor: ignore[dangerous-triggers]
+    on:
       workflow_dispatch:
       workflow_run:
         workflows: ["Run Tests"]
@@ -200,7 +200,6 @@ Let's walk through the key parts:
 - **`permissions: id-token: write`** — In the [Running Tests][running-tests] module you set `contents: read`. Here, `id-token: write` is added because the workflow needs to request OIDC tokens from Azure. This is how passwordless authentication works — no stored credentials, just short-lived tokens.
 - **`vars.*`** — Variables like `${{ vars.AZURE_CLIENT_ID }}` reference **repository variables** that `azd pipeline config` will create for you in the next step.
 - **`workflow_run`** triggers whenever **Run Tests** completes on `main`, but the privileged job proceeds only for a successful same-repository push to the default branch. Pull requests and forks cannot reach its OIDC permission. Manual `workflow_dispatch` runs remain available.
-- **Scoped audit suppression** — `zizmor` warns on every privileged `workflow_run` trigger. The inline suppression is justified by the event, repository, and branch checks above; do not copy it without the same trust boundary.
 - **Exact tested commit** — Automated deployment checks out `github.event.workflow_run.head_sha`, the exact commit CI tested. A manual run uses the commit selected for that run.
 - **`persist-credentials: false`** — Checkout does not leave its GitHub token in local Git configuration for later deployment steps.
 - **`concurrency`** prevents conflicting deployments. Note `cancel-in-progress: false` to avoid accidentally cancelling an active deployment.
