@@ -8,7 +8,7 @@
 
 Publish a clearly labeled serverless Tailspin Shelter preview. The workflow exports the committed SQLite dogs and breeds to JSON, prerenders Astro pages, and deploys static HTML beneath the attendee repository's project path.
 
-This is a preview, not the full Flask and SQLite application. The core Azure demonstration remains the full-stack deployment path.
+This is a preview, not the full Flask and SQLite application. Module 06 remains the full-stack Azure deployment path.
 
 ## At a glance
 

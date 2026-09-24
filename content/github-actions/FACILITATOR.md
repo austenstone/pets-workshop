@@ -1,6 +1,6 @@
 # GitHub Actions Workshop Facilitator Guide
 
-This guide runs the workshop as a 120-minute local event. The attendee path is hands-on through CI, then uses a prepared facilitator demonstration for Azure.
+This guide runs the workshop as a 120-minute local event. The attendee path is hands-on through CI. During Azure, attendees with the required subscription and permissions may execute the module while everyone else follows a prepared facilitator deployment.
 
 > [!NOTE]
 > Workshop workflows and snippets intentionally use the latest stable major action tags so attendees see readable, current examples. `zizmor` will report unpinned action references; that advisory is an accepted demo tradeoff, not a clean-security claim.
@@ -16,9 +16,9 @@ Complete these checks before attendees arrive:
 - Prepare one clean demo repository with successful **Run Tests** checks already visible.
 - Keep the source template's checkpoint branches available after each major exercise so staff can recover an attendee without redoing earlier modules.
 - Put the workshop links and support channel in one shared location.
-- For the Azure demo, use a dedicated subscription or resource group, a disposable repository, and a tenant where the presenter has the permissions listed below.
+- For the Azure fallback, use a dedicated subscription or resource group, a disposable repository, and a tenant where the operator has the permissions listed below.
 
-Attendees need a GitHub account and basic Git familiarity. They do not need an Azure subscription.
+Attendees need a GitHub account and basic Git familiarity. Azure access is optional; lacking it does not block Modules 07–09.
 
 ## 120-minute agenda
 
@@ -31,7 +31,7 @@ Attendees need a GitHub account and basic Git familiarity. They do not need an A
 | 00:42-01:02 | 20 | Build the Python and Playwright CI workflow |
 | 01:02-01:10 | 8 | Add dependency caching |
 | 01:10-01:20 | 10 | Add the Python matrix and discuss parallelism |
-| 01:20-01:32 | 12 | Facilitator Azure deployment demo |
+| 01:20-01:32 | 12 | Azure deployment walkthrough: execute if preflighted, otherwise follow along |
 | 01:32-01:44 | 12 | Build the composite action |
 | 01:44-01:54 | 10 | Extract the reusable deployment workflow |
 | 01:54-02:00 | 6 | Configure the solo-safe ruleset, recap, and next steps |
@@ -59,7 +59,7 @@ Use **12 staff**:
 - 1 producer/timekeeper monitoring chat and room signals
 - 8 floor or breakout helpers, one per 10 attendees
 - 1 workspace and GitHub authentication specialist
-- 1 Azure demo operator
+- 1 Azure deployment operator
 
 Do not ask the lead facilitator to troubleshoot individual environments while presenting. Assign attendee rows or breakout rooms to named helpers before the session.
 
@@ -76,7 +76,7 @@ Then:
 3. Demonstrate Azure, custom actions, reusable workflows, and rulesets from that repository.
 4. Move helpers to one-to-one recovery without delaying the main presentation.
 
-Do not move the ripcord later than 01:10. The Azure demo and wrap-up need the final 40 minutes.
+Do not move the ripcord later than 01:10. The Azure segment and wrap-up need the final 40 minutes.
 
 ## Environment fallbacks
 
@@ -145,33 +145,38 @@ Use path-scoped recovery so the attendee keeps their repository history and unre
 
 Replace `run-tests.yml` in the review and staging commands with the exact paths restored in step 4. The attendee can continue on the recovery branch or open a pull request later. During the workshop, prioritize getting them back to the current exercise without rewriting their branch.
 
-## Azure demo plan
+## Azure module plan
 
-### Required presenter permissions
+### Required execution permissions
 
-The Azure operator needs:
+Anyone executing the Azure steps needs:
 
 - An Azure subscription and permission to create the demo resources.
-- **Owner**, or **Contributor** plus **User Access Administrator**, at the deployment scope so the pipeline identity can receive role assignments.
+- Effective Azure permission for `Microsoft.Authorization/roleAssignments/write` after `notActions` is applied. **Owner**, or **Contributor** plus **User Access Administrator**, at the deployment scope satisfies this requirement; a wildcard `actions` grant alone does not prove it.
 - Microsoft Entra permission to create an app registration/service principal and federated identity credential.
-- Admin access to the disposable GitHub repository so `azd pipeline config` can create Actions variables and configure the workflow.
+- Admin access to the GitHub repository so `azd pipeline config` can create Actions variables and configure the workflow.
+
+The facilitator should still prepare a fallback repository and deployment for attendees without these permissions.
 
 ### Prepared state
 
 - Authenticate `azd` before the session.
-- Keep the generated `infra/` directory and corrected workflow ready on a checkpoint branch.
+- Keep the generated `infra/` directory and hardened, rehearsal-proven workflow ready on a checkpoint branch.
 - Pre-provision once before the event to identify provider-registration or quota failures.
-- Record the environment name, resource group, tenant ID, subscription ID, and pipeline application/client ID for cleanup.
+- Record the environment name, resource group, tenant ID, subscription ID, pipeline application/client ID, service-principal object ID, and pipeline-created role assignments for cleanup.
 - Keep a successful deployment run and live endpoint available in case the live deployment exceeds the 12-minute slot.
 
 ### Live sequence
 
-1. Explain the `workflow_run` gate and show checkout of `github.event.workflow_run.head_sha`.
-2. Show the generated Bicep and the client `API_SERVER_URL`.
-3. Run or summarize `azd pipeline config`, emphasizing OIDC and the required permissions.
-4. Show the repository variables without exposing credentials.
-5. Open the successful CI run, the triggered deployment run, and the deployed application.
-6. If a live command exceeds two minutes, switch to the prepared successful run.
+1. State the capability gate. Attendees with the required access may execute; everyone else follows the prepared deployment and continues afterward.
+2. Explain the hardened `workflow_run` trust checks, exact `head_sha` checkout, and federated `azd auth login`.
+3. Show the generated Bicep and the client `API_SERVER_URL`.
+4. Run or summarize `azd pipeline config`, emphasizing OIDC, detected subjects, and the required permissions.
+5. Show the five repository variables without exposing credentials.
+6. Open the successful CI run, the triggered deployment run, and both the client and API endpoints.
+7. If a live command exceeds two minutes, switch to the prepared successful run.
+
+If an attendee reaches an Azure DevOps create/configure prompt, have them answer **No**, cancel with <kbd>Ctrl</kbd>+<kbd>C</kbd>, and rerun `azd pipeline config --provider github --auth-type federated --environment "$AZD_ENVIRONMENT_NAME"`. No Azure DevOps cleanup is needed after answering **No**.
 
 ### Cleanup
 
@@ -179,5 +184,7 @@ Immediately after the workshop:
 
 1. Run `azd down --purge --force`.
 2. Confirm the resource group and soft-deleted resources are gone.
-3. Delete the dedicated Microsoft Entra app registration/service principal and federated credential. `azd down` does not remove pipeline identities.
-4. Remove Azure Actions variables and delete the disposable demo repository if it is no longer needed.
+3. Delete the pipeline-created **Contributor** and **User Access Administrator** role assignments.
+4. Delete the dedicated Microsoft Entra app registration, service principal, and every federated credential. `azd down` does not remove pipeline identities or RBAC assignments.
+5. Remove all five Azure Actions variables and delete the disposable demo repository if it is no longer needed.
+6. Independently verify zero resources, role assignments, identities, federated credentials, and repository variables remain.

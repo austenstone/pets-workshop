@@ -5,8 +5,8 @@
 
 With CI in place, it's time for CD — continuous deployment or continuous delivery. We'll use the [Azure Developer CLI (azd)][azd-docs], Microsoft's recommended tool for deploying to Azure. **azd** handles the heavy lifting: generating infrastructure-as-code (Bicep), configuring passwordless authentication (OIDC), and creating the GitHub Actions workflow.
 
-> [!CAUTION]
-> **Facilitator demo only.** Attendees should not run the Azure commands in this exercise. `azd pipeline config` requires an Azure subscription, permission to create resources, Microsoft Entra permission to create an application/service principal and federated credential, permission to create Azure role assignments (**Owner**, or **Contributor** plus **User Access Administrator**, at the deployment scope), and repository administration permission to configure Actions variables. The facilitator must use a dedicated demo subscription or resource group and a disposable demo repository.
+> [!IMPORTANT]
+> You can complete this deployment if you have an Azure subscription, repository administration permission, and Microsoft Entra permission to create an application, service principal, and federated credential. Your effective Azure permissions must allow resource creation and `Microsoft.Authorization/roleAssignments/write` after `notActions` is applied. In practice, use **Owner** or equivalent resource-write plus role-assignment authority at the deployment scope. `azd pipeline config` grants the new pipeline identity **Contributor** and **User Access Administrator** at the selected subscription by default. If your tenant's `allowedToCreateApps` policy is disabled, you need an Entra role or administrator assistance that permits app registration. Without these capabilities, follow the facilitator's prepared deployment and continue to Module 07; skipping live deployment does not block later modules.
 
 ## Scenario
 
@@ -29,15 +29,28 @@ There are several strategies for ensuring only validated code reaches production
 > [!TIP]
 > GitHub also supports **environments** with deployment protection rules (like manual approval gates). Environments are a powerful option when you need separate staging and production deployments — but for this workshop, branch rulesets give us the same safety with less setup. See the [environments documentation][environments-docs] to explore that approach on your own.
 
-## Facilitator demo: install and initialize azd
+## Verify your accounts and install azd
 
-The facilitator sets up the Azure Developer CLI and scaffolds the infrastructure while attendees follow along.
+Before creating anything, confirm that the repository and cloud accounts belong to you and that you intend to use them for this workshop.
 
-1. In the facilitator's prepared demo workspace, open a terminal. These Azure commands are presenter-only and are not part of the attendee editor path.
-2. Install azd by running:
+1. Open a terminal in your workspace and verify the GitHub repository:
 
     ```bash
-    curl -fsSL https://aka.ms/install-azd.sh | bash
+    git remote get-url origin
+    gh auth status
+    gh repo view --json nameWithOwner,url
+    ```
+
+    Stop if these commands do not show your attendee repository and an account with repository administration permission.
+
+2. Install `azd` without requiring `sudo`:
+
+    ```bash
+    mkdir -p "$HOME/.local/bin"
+    curl -fsSL https://aka.ms/install-azd.sh |
+      bash -s -- --install-folder "$HOME/.local/bin"
+    export PATH="$HOME/.local/bin:$PATH"
+    azd version
     ```
 
 3. Log in to Azure:
@@ -46,22 +59,32 @@ The facilitator sets up the Azure Developer CLI and scaffolds the infrastructure
     azd auth login
     ```
 
-    Follow the device code flow — open the URL shown, enter the code, and sign in with your Azure account.
+    Complete the browser or device-code flow shown by `azd`.
 
-4. Initialize the project by running:
+4. Verify that `azd` is using the intended account and tenant:
+
+    ```bash
+    azd auth status
+    ```
+
+    `azd` and the Azure CLI (`az`) maintain separate authentication contexts. `az account show` does not confirm which identity or tenant `azd` will use. If `azd auth status` shows the wrong account, run `azd auth logout`, sign in again, and recheck before continuing.
+
+## Initialize azd
+
+1. Initialize the project:
 
     ```bash
     azd init --from-code
     ```
 
-5. `azd` will scan your project and detect the client and server services. When prompted, select **Confirm and continue initializing my app** to accept the detected services and generate the project configuration.
-6. By default, `azd` generates infrastructure in memory at deploy time. To customize the infrastructure, persist it to disk by running:
+2. `azd` will scan your project and detect the client and server services. When prompted, select **Confirm and continue initializing my app** to accept the detected services and generate the project configuration.
+3. By default, `azd` generates infrastructure in memory at deploy time. To customize the infrastructure, persist it to disk:
 
     ```bash
     azd infra gen
     ```
 
-7. Explore the generated `infra/` directory. You'll see Bicep files (`.bicep`) that define the Azure resources for your application:
+4. Explore the generated `infra/` directory:
 
     ```bash
     ls infra/
@@ -78,11 +101,11 @@ The generated `infra/` directory contains several Bicep files that work together
 - **`modules/`** — Helper modules referenced by the main files (e.g., for fetching container image metadata).
 - **`abbreviations.json`** — A lookup table `azd` uses to generate consistent, short resource names following Azure naming conventions.
 
-## Facilitator demo: configure the infrastructure
+## Configure the infrastructure
 
 The generated Bicep files define the Azure Container Apps that will host the client and server. We need to add an environment variable so the client knows where to find the API server.
 
-1. Open `infra/resources.bicep` in the facilitator's prepared demo workspace.
+1. Open `infra/resources.bicep` in your workspace.
 2. Find the section (around line 109) that reads:
 
     ```bicep
@@ -104,7 +127,7 @@ The generated Bicep files define the Azure Container Apps that will host the cli
 > [!NOTE]
 > While the syntax resembles JSON, **it's not JSON**. You'll need to resist the natural urge to add commas between the objects!
 
-## Facilitator demo: create the CD workflow
+## Create the CD workflow
 
 By default, `azd pipeline config` generates a simple workflow that deploys on every push to `main`. That works for getting started, but we want a workflow that only deploys **after CI passes**. If you create the workflow file *first*, `azd` will detect it and configure credentials around your custom workflow instead of generating the default.
 
@@ -119,7 +142,7 @@ Let's create a workflow that:
     ```yaml
     name: Deploy App
 
-    on:
+    on: # zizmor: ignore[dangerous-triggers]
       workflow_dispatch:
       workflow_run:
         workflows: ["Run Tests"]
@@ -133,7 +156,12 @@ Let's create a workflow that:
     jobs:
       deploy:
         runs-on: ubuntu-latest
-        if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+        if: >-
+          github.event_name == 'workflow_dispatch' ||
+          (github.event.workflow_run.conclusion == 'success' &&
+          github.event.workflow_run.event == 'push' &&
+          github.event.workflow_run.head_repository.full_name == github.repository &&
+          github.event.workflow_run.head_branch == github.event.repository.default_branch)
         concurrency:
           group: deploy-production
           cancel-in-progress: false
@@ -142,16 +170,20 @@ Let's create a workflow that:
           - uses: actions/checkout@v7
             with:
               ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
-
-          - name: Log in with Azure (Federated Credentials)
-            uses: Azure/login@v3
-            with:
-              client-id: ${{ vars.AZURE_CLIENT_ID }}
-              tenant-id: ${{ vars.AZURE_TENANT_ID }}
-              subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+              persist-credentials: false
 
           - name: Install azd
             uses: Azure/setup-azd@v2
+
+          - name: Log in with Azure (Federated Credentials)
+            run: |
+              azd auth login \
+                --client-id "$AZURE_CLIENT_ID" \
+                --federated-credential-provider github \
+                --tenant-id "$AZURE_TENANT_ID"
+            env:
+              AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+              AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
 
           - name: Provision and deploy
             run: azd up --no-prompt
@@ -166,78 +198,252 @@ Let's create a workflow that:
 Let's walk through the key parts:
 
 - **`permissions: id-token: write`** — In the [Running Tests][running-tests] module you set `contents: read`. Here, `id-token: write` is added because the workflow needs to request OIDC tokens from Azure. This is how passwordless authentication works — no stored credentials, just short-lived tokens.
-- **`azure/login`** — Uses the repository's OIDC variables to authenticate with Azure without a password or a hand-written login command.
 - **`vars.*`** — Variables like `${{ vars.AZURE_CLIENT_ID }}` reference **repository variables** that `azd pipeline config` will create for you in the next step.
-- **`workflow_run`** triggers this workflow whenever the **Run Tests** workflow completes on `main`. The `if` condition ensures it only proceeds when tests **succeeded** — or when triggered manually via `workflow_dispatch`.
-- **`actions/checkout`** checks out `github.event.workflow_run.head_sha` for automated deployments, ensuring the deployed commit is the exact commit that passed CI. A manual run checks out the commit selected for that run.
+- **`workflow_run`** triggers whenever **Run Tests** completes on `main`, but the privileged job proceeds only for a successful same-repository push to the default branch. Pull requests and forks cannot reach its OIDC permission. Manual `workflow_dispatch` runs remain available.
+- **Scoped audit suppression** — `zizmor` warns on every privileged `workflow_run` trigger. The inline suppression is justified by the event, repository, and branch checks above; do not copy it without the same trust boundary.
+- **Exact tested commit** — Automated deployment checks out `github.event.workflow_run.head_sha`, the exact commit CI tested. A manual run uses the commit selected for that run.
+- **`persist-credentials: false`** — Checkout does not leave its GitHub token in local Git configuration for later deployment steps.
 - **`concurrency`** prevents conflicting deployments. Note `cancel-in-progress: false` to avoid accidentally cancelling an active deployment.
+- **Federated `azd auth login`** — The workflow authenticates `azd` itself with a short-lived GitHub OIDC token. Authenticating another Azure tool does not automatically authenticate `azd`.
 - **`azd up`** provisions infrastructure and deploys your application in one command.
 
-## Facilitator demo: set up Azure authentication
+## Set up Azure authentication
 
-The facilitator now lets `azd` configure the pipeline credentials. Because the workflow file already exists, `azd` will configure OIDC and variables around it rather than generating a new one. Attendees should observe rather than authenticate to the facilitator's Azure tenant.
+Now let `azd` configure the pipeline identity. Because the workflow file already exists, `azd` configures OIDC and repository variables around it instead of generating a different deployment workflow.
 
-1. Configure the deployment pipeline:
+1. Choose a unique environment name, then configure the GitHub pipeline explicitly with federated authentication:
 
     ```bash
-    azd pipeline config
+    AZD_ENVIRONMENT_NAME="<YOUR_UNIQUE_ENVIRONMENT_NAME>"
+    azd pipeline config \
+      --provider github \
+      --auth-type federated \
+      --environment "$AZD_ENVIRONMENT_NAME"
     ```
 
 2. Follow the prompts — here's what to expect:
 
     | Prompt | What to select |
     |--------|---------------|
-    | **Select a provider** | Choose **GitHub** |
-    | **Enter a unique environment name** | Enter a short name (e.g., `<HANDLE>-pets-workshop`) — this names your Azure resource group |
-    | **Select an Azure subscription** | Choose the subscription you want to deploy to |
-    | **Select an Azure location** | Pick a region close to you (e.g., `eastus2`) |
-    | **Select how to authenticate the pipeline to Azure** | Choose **Federated Service Principal (SP + OIDC)** |
+    | **Environment** | Confirm the unique environment name supplied in the command |
+    | **Select an Azure subscription** | Explicitly choose the intended subscription; do not rely on an Azure CLI default |
+    | **Select an Azure location** | Pick a supported region with available Container Apps and registry quota (for example, `eastus2`) |
+    | **Select how to authenticate the pipeline to Azure** | Choose **Federated Service Principal (SP + OIDC)**, not the default managed-identity option |
+    | **Choose federated credential subjects** | Review the repository and detected subjects, then choose **Use detected subjects (Recommended)** for the workshop only if they match the branches and pull-request trust you intend |
+
+> [!WARNING]
+> If you accidentally select Azure DevOps or see an unexpected Azure DevOps create/configure prompt, answer **No**, press <kbd>Ctrl</kbd>+<kbd>C</kbd> to cancel, and rerun the explicit GitHub command above. If you answered **No**, no Azure DevOps cleanup is needed because nothing was created or configured.
 
     After you answer these, `azd` will:
-    - Create OIDC credentials in Azure for passwordless authentication
-    - Store the necessary secrets and variables in your repository automatically
+    - Create a dedicated application, service principal, and federated credentials for passwordless authentication
+    - Grant the pipeline identity **Contributor** and **User Access Administrator** on the selected subscription by default
+    - Store `AZURE_CLIENT_ID`, `AZURE_ENV_NAME`, `AZURE_LOCATION`, `AZURE_SUBSCRIPTION_ID`, and `AZURE_TENANT_ID` as repository variables
     - Detect your existing workflow file and configure it
 
-3. When prompted to commit and push local changes, the facilitator confirms the disposable demo repository is selected before saying **yes**.
+3. Before accepting the commit-and-push prompt, run `git remote get-url origin`, review the generated files with `git status` and `git diff`, and confirm the repository, account, tenant, subscription, region, and federated subjects one more time. Then say **yes** if all of them are correct.
 
 > [!TIP]
-> After `azd pipeline config` completes, navigate to **Settings** > **Secrets and variables** > **Actions** > **Variables** tab to see the repository variables it created (like `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, etc.). These are the `vars.*` values your workflow references.
+> `azd` may print a generic message saying GitHub Action “secrets” were configured. This OIDC path creates the five variables above and no client secret. Verify the exact account and subscription before deployment:
+>
+> ```bash
+> azd auth status
+> gh repo view --json nameWithOwner,url
+> printf 'Pipeline tenant: '
+> gh variable get AZURE_TENANT_ID
+> printf 'Pipeline subscription: '
+> gh variable get AZURE_SUBSCRIPTION_ID
+> gh variable list
+> ```
 
-## Facilitator demo: test the pipeline
+## Test the pipeline
 
 When you said **yes** to `azd pipeline config`'s commit prompt, it pushed your changes — including the workflow file. Let's verify everything is working.
 
 1. Navigate to the **Actions** tab. The push will trigger the **Run Tests** workflow first.
 2. Once tests complete successfully, the **Deploy App** workflow will start automatically (via the `workflow_run` trigger).
 3. Watch the deploy job run — it will provision Azure resources and deploy both the client and server applications.
-4. Once the deployment completes, return to the facilitator's prepared demo workspace.
-5. In the presenter terminal, list the details of the new Azure environment:
+4. Once the deployment completes, return to your workspace.
+5. List the details of the new Azure environment:
 
     ```bash
     azd show
     ```
 
-6. Look for the **client** service endpoint in the output.
-7. Open the client URL in your browser — you should see the pet shelter application live!
-
-## Facilitator cleanup
-
-Cleanup is part of the demo, not an optional follow-up:
-
-1. Record the demo environment name, resource group, and the application/client ID created for the pipeline.
-2. From the prepared demo repository, delete the provisioned resources:
+6. Record both the **client** and **server** service endpoints from the output.
+7. Open the client URL and confirm the page displays **Welcome to Tailspin Shelter**, **Available Dogs**, and dog cards loaded from the API.
+8. Verify the client root, a dog detail page, and the full API response. Replace the two placeholders with the endpoints from `azd show`:
 
     ```bash
-    azd down --purge --force
+    CLIENT_URL="https://CLIENT_ENDPOINT"
+    SERVER_URL="https://SERVER_ENDPOINT"
+    CLIENT_URL="${CLIENT_URL%/}"
+    SERVER_URL="${SERVER_URL%/}"
+    DOGS_JSON="$(mktemp)"
+    trap 'rm -f "$DOGS_JSON"' EXIT
+
+    curl -fsSL "$SERVER_URL/api/dogs?per_page=100" >"$DOGS_JSON"
+    DOG_ID="$(jq -er '.dogs[0].id' "$DOGS_JSON")"
+    DOG_NAME="$(jq -er '.dogs[0].name' "$DOGS_JSON")"
+    jq -e \
+      '(.dogs | length) == 100 and
+       (.dogs[0] | has("id") and has("name") and has("breed"))' \
+      "$DOGS_JSON"
+    curl -fsSL "$CLIENT_URL/" |
+      rg -F 'Welcome to Tailspin Shelter'
+    curl -fsSL "$CLIENT_URL/" |
+      rg -F "$DOG_NAME"
+    curl -fsSL "$CLIENT_URL/dog/$DOG_ID" |
+      rg -F "$DOG_NAME"
+
+    rm -f "$DOGS_JSON"
+    trap - EXIT
     ```
 
-3. Confirm the resource group and any soft-deleted resources are gone in the Azure portal.
-4. Delete the dedicated Microsoft Entra app registration/service principal and its federated credential if `azd pipeline config` created them. `azd down` does not remove pipeline identities.
-5. Delete the demo repository's Azure Actions variables and remove the disposable repository if it is no longer needed.
+The rehearsal completed this OIDC and Container Apps deployment in 4 minutes 4 seconds. Treat that as validation, not a duration guarantee: provider registration, image builds, regional capacity, and network conditions vary.
+
+## Cleanup
+
+Cleanup includes more than deleting the Container Apps. `azd down` removes provisioned resources, but it does not remove the pipeline's Azure role assignments, Microsoft Entra application/service principal/federated credentials, or GitHub variables.
+
+1. Capture the identifiers before deleting anything, then select the environment explicitly:
+
+    ```bash
+    AZURE_CLIENT_ID="$(gh variable get AZURE_CLIENT_ID)"
+    AZURE_ENV_NAME="$(gh variable get AZURE_ENV_NAME)"
+    AZURE_SUBSCRIPTION_ID="$(gh variable get AZURE_SUBSCRIPTION_ID)"
+    AZURE_TENANT_ID="$(gh variable get AZURE_TENANT_ID)"
+    azd env select "$AZURE_ENV_NAME"
+    AZURE_RESOURCE_GROUP="$(azd env get-value AZURE_RESOURCE_GROUP)"
+    ```
+
+2. Remove the deployed resources. Omit `--force --no-prompt` if you prefer an interactive confirmation:
+
+    ```bash
+    azd down \
+      -e "$AZURE_ENV_NAME" \
+      --purge \
+      --force \
+      --no-prompt
+    ```
+
+    Azure resource-group deletion is asynchronous. Do not continue until this prints `false`:
+
+    ```bash
+    az group exists \
+      --name "$AZURE_RESOURCE_GROUP" \
+      --subscription "$AZURE_SUBSCRIPTION_ID"
+    ```
+
+3. Authenticate the separate Azure CLI context to the same tenant and subscription, then resolve the pipeline service principal:
+
+    ```bash
+    az login --tenant "$AZURE_TENANT_ID"
+    az account set --subscription "$AZURE_SUBSCRIPTION_ID"
+    AZURE_SP_OBJECT_ID="$(
+      az ad sp show --id "$AZURE_CLIENT_ID" --query id -o tsv
+    )"
+    ```
+
+4. Inspect and remove only this pipeline identity's **Contributor** and **User Access Administrator** assignments at the selected subscription:
+
+    ```bash
+    AZURE_SCOPE="/subscriptions/$AZURE_SUBSCRIPTION_ID"
+    ROLE_ASSIGNMENT_IDS="$(
+      az role assignment list \
+        --assignee-object-id "$AZURE_SP_OBJECT_ID" \
+        --scope "$AZURE_SCOPE" \
+        --query \
+          "[?roleDefinitionName=='Contributor' ||
+             roleDefinitionName=='User Access Administrator'].id" \
+        -o tsv
+    )"
+
+    while IFS= read -r assignment_id; do
+      [ -z "$assignment_id" ] ||
+        az role assignment delete --ids "$assignment_id"
+    done <<< "$ROLE_ASSIGNMENT_IDS"
+    ```
+
+5. Delete the federated credentials, service principal, and app registration:
+
+    ```bash
+    az ad app federated-credential list \
+      --id "$AZURE_CLIENT_ID" \
+      --query '[].id' -o tsv |
+      while IFS= read -r credential_id; do
+        az ad app federated-credential delete \
+          --id "$AZURE_CLIENT_ID" \
+          --federated-credential-id "$credential_id"
+      done
+
+    test "$(
+      az ad app federated-credential list \
+        --id "$AZURE_CLIENT_ID" \
+        --query 'length(@)' -o tsv
+    )" = "0"
+    az ad sp delete --id "$AZURE_SP_OBJECT_ID"
+    az ad app delete --id "$AZURE_CLIENT_ID"
+    ```
+
+6. Delete exactly the five repository variables created for this deployment:
+
+    ```bash
+    for variable in \
+      AZURE_CLIENT_ID \
+      AZURE_ENV_NAME \
+      AZURE_LOCATION \
+      AZURE_SUBSCRIPTION_ID \
+      AZURE_TENANT_ID
+    do
+      gh variable delete "$variable"
+    done
+    ```
+
+7. Independently confirm the resources, access, identities, and variables are gone:
+
+    ```bash
+    test "$(
+      az group exists \
+        --name "$AZURE_RESOURCE_GROUP" \
+        --subscription "$AZURE_SUBSCRIPTION_ID"
+    )" = "false"
+    test "$(
+      az resource list \
+        --subscription "$AZURE_SUBSCRIPTION_ID" \
+        --tag "azd-env-name=$AZURE_ENV_NAME" \
+        --query 'length(@)' -o tsv
+    )" = "0"
+    test "$(
+      az role assignment list \
+        --assignee-object-id "$AZURE_SP_OBJECT_ID" \
+        --scope "$AZURE_SCOPE" \
+        --query 'length(@)' -o tsv
+    )" = "0"
+    test "$(
+      az ad app list \
+        --filter "appId eq '$AZURE_CLIENT_ID'" \
+        --query 'length(@)' -o tsv
+    )" = "0"
+    test "$(
+      az ad sp list \
+        --filter "appId eq '$AZURE_CLIENT_ID'" \
+        --query 'length(@)' -o tsv
+    )" = "0"
+
+    for variable in \
+      AZURE_CLIENT_ID \
+      AZURE_ENV_NAME \
+      AZURE_LOCATION \
+      AZURE_SUBSCRIPTION_ID \
+      AZURE_TENANT_ID
+    do
+      ! gh variable get "$variable" >/dev/null 2>&1
+    done
+    ```
 
 ## Summary and next steps
 
-Congratulations! You've deployed the pet shelter application to Azure with a CI/CD pipeline:
+You have now deployed, or followed the deployment of, the pet shelter application with a CI/CD pipeline:
 
 - **CI-gated deployment** — CD only runs after CI passes, using `workflow_run`
 - **OIDC authentication** — passwordless, short-lived tokens instead of stored credentials

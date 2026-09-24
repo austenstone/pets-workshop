@@ -23,7 +23,7 @@ A **composite action** combines multiple *steps* into a single step that runs in
 | **Where it lives** | `action.yml` in any directory (e.g. `.github/actions/`) | `.github/workflows/` directory only |
 | **How it's called** | `uses:` inside a job's `steps` | `uses:` directly on a `job`, not inside steps |
 | **Runner control** | Runs on the caller job's runner | Each job specifies its own runner |
-| **Secrets** | Cannot access secrets directly | Can receive secrets via `secrets:` or `secrets: inherit` |
+| **Secrets** | Cannot access secrets directly | Can receive explicitly declared secrets from callers |
 | **Logging** | Appears as one collapsed step in the log | Every job and step is logged individually |
 | **Nesting depth** | Up to 10 composite actions per workflow | Up to 10 levels of workflow nesting |
 | **Marketplace** | Can be published to the [Actions Marketplace][actions-marketplace] | Cannot be published to the Marketplace |
@@ -33,57 +33,9 @@ A **composite action** combines multiple *steps* into a single step that runs in
 - Choose a **composite action** when you want to bundle a handful of related steps that run within a single job — like the `setup-python-env` action you just built.
 - Choose a **reusable workflow** when you want to share entire job definitions — including runner selection, environment targeting, and concurrency controls — across multiple workflows. Deployment pipelines are a classic use case, which is exactly what we'll build next.
 
-## Understanding secrets in reusable workflows
+## Understanding authentication in reusable workflows
 
-Reusable workflows often need access to secrets and variables — for example, deployment credentials. There are two approaches:
-
-### Pass all secrets
-
-Using `secrets: inherit` to forward every secret available in the calling workflow to the reusable workflow.
-
-    ```yaml
-    deploy:
-      uses: ./.github/workflows/reusable-deploy.yml
-      with:
-        deploy-ref: main
-      secrets: inherit
-    ```
-
-### Define specific secrets
-
-For a more controlled approach, you can identify which specific secrets to pass in the reusable workflow's `on.workflow_call.secrets` section:
-
-```yaml
-on:
-  workflow_call:
-    inputs:
-      deploy-ref:
-        required: false
-        type: string
-    secrets:
-      AZURE_CLIENT_ID:
-        required: true
-      AZURE_TENANT_ID:
-        required: true
-      AZURE_SUBSCRIPTION_ID:
-        required: true
-```
-
-Then caller then passes each secret explicitly:
-
-```yaml
-deploy:
-  uses: ./.github/workflows/reusable-deploy.yml
-  with:
-    deploy-ref: main
-  secrets:
-    AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-    AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-    AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-```
-
-> [!IMPORTANT]
-> For deployment workflows that need Azure credentials, `secrets: inherit` is the simplest approach. However, defining specific secrets provides better documentation and prevents accidentally exposing secrets the reusable workflow doesn't need. We'll use `secrets: inherit` in this exercise for simplicity.
+Reusable workflows can receive explicitly declared secrets from callers, but this deployment does not need any Azure credential secret. The same-repository reusable workflow reads the five non-secret `AZURE_*` repository variables created in Module 06 and requests a short-lived Azure token with GitHub OIDC. Keep the permission and variable boundary explicit; do not forward unrelated secrets.
 
 ## Create a reusable deployment workflow
 
@@ -103,6 +55,10 @@ Let's extract the shared deploy steps into a reusable workflow. The workflow req
             description: 'Git ref to deploy (commit SHA, tag, or branch).'
             required: true
             type: string
+
+    permissions:
+      id-token: write
+      contents: read
     ```
 
 3. Add a single job that checks out the code, authenticates with Azure, and deploys:
@@ -119,16 +75,20 @@ Let's extract the shared deploy steps into a reusable workflow. The workflow req
             uses: actions/checkout@v7
             with:
               ref: ${{ inputs.deploy-ref }}
-
-          - name: Log in with Azure (Federated Credentials)
-            uses: Azure/login@v3
-            with:
-              client-id: ${{ vars.AZURE_CLIENT_ID }}
-              tenant-id: ${{ vars.AZURE_TENANT_ID }}
-              subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+              persist-credentials: false
 
           - name: Install azd
             uses: Azure/setup-azd@v2
+
+          - name: Log in with Azure (Federated Credentials)
+            run: |
+              azd auth login \
+                --client-id "$AZURE_CLIENT_ID" \
+                --federated-credential-provider github \
+                --tenant-id "$AZURE_TENANT_ID"
+            env:
+              AZURE_CLIENT_ID: ${{ vars.AZURE_CLIENT_ID }}
+              AZURE_TENANT_ID: ${{ vars.AZURE_TENANT_ID }}
 
           - name: Deploy application
             run: azd up --no-prompt
@@ -150,7 +110,7 @@ Now update your `azure-dev.yml` to call the reusable workflow instead of definin
     ```yaml
     name: Deploy App
 
-    on:
+    on: # zizmor: ignore[dangerous-triggers]
       workflow_dispatch:
       workflow_run:
         workflows: ["Run Tests"]
@@ -163,14 +123,18 @@ Now update your `azure-dev.yml` to call the reusable workflow instead of definin
 
     jobs:
       deploy:
-        if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+        if: >-
+          github.event_name == 'workflow_dispatch' ||
+          (github.event.workflow_run.conclusion == 'success' &&
+          github.event.workflow_run.event == 'push' &&
+          github.event.workflow_run.head_repository.full_name == github.repository &&
+          github.event.workflow_run.head_branch == github.event.repository.default_branch)
         uses: ./.github/workflows/reusable-deploy.yml
         with:
           deploy-ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.sha }}
-        secrets: inherit
     ```
 
-    Notice how the entire job definition is replaced by a single `uses:` reference. The caller passes `github.event.workflow_run.head_sha` for automated deployments, so the reusable workflow checks out the exact commit that passed CI rather than whichever commit is currently at the tip of `main`. Manual runs use the commit selected for that run.
+    Notice how the entire job definition is replaced by a single `uses:` reference. The caller accepts automated deployment only from a successful same-repository push to the default branch, then passes `github.event.workflow_run.head_sha` so the reusable workflow checks out the exact commit that passed CI rather than whichever commit is currently at the tip of `main`. Manual runs use the commit selected for that run. The narrowly scoped `zizmor` suppression is safe only while this trust boundary remains in place.
 
 ## Create a manual deploy workflow
 
@@ -199,7 +163,6 @@ Now let's add the second caller — a manual deploy workflow for rollbacks and h
         uses: ./.github/workflows/reusable-deploy.yml
         with:
           deploy-ref: ${{ inputs.deploy-ref }}
-        secrets: inherit
     ```
 
     This workflow is only triggered **manually** via `workflow_dispatch` — it appears as a "Run workflow" button in the Actions tab. It prompts for a **git ref** (a commit SHA, tag, or branch name to deploy), passes that ref to the reusable workflow's `deploy-ref` input, and uses the same deploy logic as the automated pipeline.

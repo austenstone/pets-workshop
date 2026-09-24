@@ -16,12 +16,12 @@ To complete this workshop, you will need the following:
 - A [GitHub account][github-signup]
 - Familiarity with Git basics (commit, push, pull)
 
-Azure access is not required for attendees. The Azure deployment exercise is a facilitator-led demo because its setup requires Azure, Microsoft Entra, role-assignment, and repository administration permissions.
+Azure access is optional. Attendees with an Azure subscription plus the required Azure, Microsoft Entra, role-assignment, and repository administration permissions can complete the deployment exercise. Everyone else can follow the facilitator's prepared deployment and continue with Module 07; skipping the live deployment does not block later modules.
 
 > [!NOTE]
 > If you have access to [GitHub Copilot][github-copilot], it can help you write workflow YAML files. You'll see tips throughout the exercises on how to use it effectively.
 
-Facilitators should use the [facilitator guide][facilitator] for timing, staffing, fallbacks, the exact ripcord, and the Azure demo plan.
+Facilitators should use the [facilitator guide][facilitator] for timing, staffing, fallbacks, the exact ripcord, and the Azure module plan.
 
 ## Exercises
 

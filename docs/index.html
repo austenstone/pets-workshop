@@ -55,7 +55,7 @@ FORM: The fourth grounded structure, a sticky timeline rail with full-width modu
             <a class="button button-primary" href="#setup">Start setup</a>
             <a class="button button-secondary" href="https://github.com/austenstone/pets-workshop/generate" target="_blank" rel="noreferrer">Create your repository</a>
           </div>
-          <p class="account-note">Bring a GitHub account. Azure access is not required.</p>
+          <p class="account-note">Bring a GitHub account. Azure access is optional; attendees without it can follow the prepared deployment.</p>
         </div>
 
         <div class="workshop-qr">
@@ -211,25 +211,25 @@ FORM: The fourth grounded structure, a sticky timeline rail with full-width modu
           </div>
         </article>
 
-        <article class="module demo-module" id="module-6">
+        <article class="module" id="module-6">
           <div class="module-meta">
             <span class="module-number">6</span>
             <span class="time">12 minutes</span>
-            <span class="format demo">Facilitator demo</span>
+            <span class="format hands-on">Run or follow</span>
           </div>
           <div class="module-content">
             <h2>Deploy to Azure after CI passes</h2>
-            <p class="outcome">Outcome: understand a passwordless, CI-gated deployment without needing an Azure subscription.</p>
-            <p>Observe a prepared repository as a successful test run triggers deployment of the exact commit that passed CI.</p>
+            <p class="outcome">Outcome: create or follow a passwordless, CI-gated Azure deployment after testing succeeds.</p>
+            <p>Execute the module if you have the required Azure, Microsoft Entra, role-assignment, and repository permissions. Otherwise, follow the facilitator's prepared deployment and continue to Module 07.</p>
             <ul class="show-list">
-              <li><code>workflow_run</code> gates deployment on the completed CI workflow.</li>
-              <li><code>head_sha</code> identifies the validated commit.</li>
+              <li>Only a successful same-repository push to the default branch can start deployment.</li>
+              <li><code>head_sha</code> checks out the exact commit that CI tested.</li>
               <li>OIDC provides short-lived Azure authentication without a stored password.</li>
               <li>Concurrency prevents conflicting production deployments.</li>
               <li>Bicep defines the application infrastructure as code.</li>
             </ul>
-            <p class="note">Do not run Azure commands during the workshop. The successful workflow and deployed application are prepared in advance.</p>
-            <a class="text-link" href="https://github.com/austenstone/pets-workshop/blob/main/content/github-actions/06-deploy-azure.md" target="_blank" rel="noreferrer">Read the deployment reference</a>
+            <p class="note">Azure access is optional. Skipping the live deployment does not block any later module.</p>
+            <a class="text-link" href="https://github.com/austenstone/pets-workshop/blob/main/content/github-actions/06-deploy-azure.md" target="_blank" rel="noreferrer">Open exercise 6 instructions</a>
           </div>
         </article>
 
@@ -264,7 +264,7 @@ FORM: The fourth grounded structure, a sticky timeline rail with full-width modu
               <div><strong>Composite action</strong><span>Packages steps</span><span>Runs inside a caller job</span><span>Uses the caller's runner</span></div>
               <div><strong>Reusable workflow</strong><span>Packages jobs</span><span>Called at the job level</span><span>Defines runners and permissions</span></div>
             </div>
-            <p class="note">This remains a demonstration because deployment credentials and infrastructure exist only in the prepared repository.</p>
+            <p class="note">The timed route uses a prepared deployment. If you completed Module 06, the same reusable-workflow pattern can use your Azure variables and infrastructure.</p>
             <a class="text-link" href="https://github.com/austenstone/pets-workshop/blob/main/content/github-actions/08-reusable-workflows.md" target="_blank" rel="noreferrer">Read the reusable workflow reference</a>
           </div>
         </article>
